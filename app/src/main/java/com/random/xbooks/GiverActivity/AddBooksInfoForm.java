@@ -1,4 +1,4 @@
-package com.random.xbooks.SellerActivity;
+package com.random.xbooks.GiverActivity;
 
 /**
  * add the details of the book
