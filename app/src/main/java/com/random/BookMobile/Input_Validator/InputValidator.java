@@ -1,4 +1,4 @@
-package com.random.xbooks.Input_Validator;
+package com.random.BookMobile.Input_Validator;
 
 public class InputValidator {
     public static boolean ValidatePasswordInput(String str){

@@ -1,4 +1,4 @@
-package com.random.xbooks;
+package com.random.BookMobile;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.random.xbooks", appContext.getPackageName());
+        assertEquals("com.random.BookMobile", appContext.getPackageName());
     }
 }

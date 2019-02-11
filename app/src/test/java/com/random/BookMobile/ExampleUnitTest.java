@@ -1,4 +1,4 @@
-package com.random.xbooks;
+package com.random.BookMobile;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.random.xbooks.MeActivity;
+package com.random.BookMobile.MeActivity;
 
 /**
  * show avatar, name, email

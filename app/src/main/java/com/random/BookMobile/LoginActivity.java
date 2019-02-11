@@ -1,4 +1,4 @@
-package com.random.xbooks;
+package com.random.BookMobile;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.random.xbooks.R;
+import com.random.BookMobile.R;
 /**
  *  remember to import the database
  */
