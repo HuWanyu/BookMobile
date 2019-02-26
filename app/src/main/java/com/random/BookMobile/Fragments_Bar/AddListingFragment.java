@@ -11,11 +11,14 @@ import android.content.Intent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.random.BookMobile.R;
 
 
-public class AddListingFragment extends Fragment implements View.OnClickListener {
+public class AddListingFragment extends Fragment{
     @Override
-    public void onClick(View v) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.add_listing_fragment, container, false);
     }
 }

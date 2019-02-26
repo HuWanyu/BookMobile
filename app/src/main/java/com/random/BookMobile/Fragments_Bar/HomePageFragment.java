@@ -11,9 +11,13 @@ import android.content.Intent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class HomePageFragment extends Fragment implements View.OnClickListener {
-    @Override
-    public void onClick(View v) {
+import com.random.BookMobile.R;
 
+public class HomePageFragment extends Fragment{
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.home_fragment, container, false);
     }
 }
