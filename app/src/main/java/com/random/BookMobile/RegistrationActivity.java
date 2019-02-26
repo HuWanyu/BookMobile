@@ -152,7 +152,7 @@ public class RegistrationActivity extends AppCompatActivity{
         } else {
             // Otherwise, the insertion was successful and we can display a toast with the row ID.
             Toast.makeText(this, "Account Successfully Created", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, PreferencesActivity.class));
         }
     }
 }

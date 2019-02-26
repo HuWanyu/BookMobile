@@ -11,17 +11,24 @@
         android:visible="true"
         app:showAsAction="withText" />
     <item
-        android:id="@+id/mainNav_Giver"
+        android:id="@+id/mainNav_AddListing"
         android:checkable="false"
         android:enabled="true"
         android:icon="@android:drawable/ic_menu_send"
-        android:title="Giver"
+        android:title="Add Listing"
         android:visible="true" />
     <item
         android:id="@+id/mainNav_Profile"
         android:enabled="true"
         android:icon="@android:drawable/ic_menu_myplaces"
         android:title="Profile"
+        android:visible="true"
+        app:showAsAction="withText" />
+    <item
+        android:id="@+id/mainNav_Chat"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="Chat"
         android:visible="true"
         app:showAsAction="withText" />
 </menu>
