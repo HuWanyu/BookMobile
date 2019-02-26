@@ -12,4 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class HomePageFragment extends Fragment implements View.OnClickListener {
+    @Override
+    public void onClick(View v) {
+
+    }
 }
