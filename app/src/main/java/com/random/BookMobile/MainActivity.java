@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity{
 
         mainNav = findViewById(R.id.main_page);
         mainNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        //toggleHideyBar();
+        toggleHideyBar();
 
     }
 
@@ -46,14 +46,17 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()){
-                case R.id.mainNav_Home:
+                case R.id.mainNav_AddListing:
                     mainViewPager.setCurrentItem(0);
                     return true;
-                case R.id.mainNav_AddListing:
+                case R.id.mainNav_Home:
                     mainViewPager.setCurrentItem(1);
                     return true;
                 case R.id.mainNav_Profile:
                     mainViewPager.setCurrentItem(2);
+                    return true;
+                case R.id.mainNav_Chat:
+                    mainViewPager.setCurrentItem(3);
                     return true;
                 default:
                     return true;

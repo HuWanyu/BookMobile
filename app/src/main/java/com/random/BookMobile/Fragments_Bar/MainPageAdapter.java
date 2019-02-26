@@ -14,17 +14,19 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int sectionPosition) {
         switch (sectionPosition) {
             case 0:
-                return new HomePageFragment();
-            case 1:
                 return new AddListingFragment();
+            case 1:
+                return new HomePageFragment();
             case 2:
                 return new ProfileFragment();
+            case 3:
+                return new ChatFragment();
                 default: return new HomePageFragment();
         }
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 }
