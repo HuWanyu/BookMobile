@@ -14,11 +14,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.random.BookMobile.Fragments_Bar.GiverFragment;
+import com.random.BookMobile.Fragments_Bar.AddListingFragment;
 import com.random.BookMobile.Fragments_Bar.HomePageFragment;
 import com.random.BookMobile.Fragments_Bar.MainPageAdapter;
 import com.random.BookMobile.Fragments_Bar.ProfileFragment;
-import android.support.v4.app.Fragment;
 
 
 public class MainActivity extends AppCompatActivity{
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
                 case R.id.mainNav_Home:
                     mainViewPager.setCurrentItem(0);
                     return true;
-                case R.id.mainNav_Giver:
+                case R.id.mainNav_AddListing:
                     mainViewPager.setCurrentItem(1);
                     return true;
                 case R.id.mainNav_Profile:
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity{
             i.putExtra("id",0);
         }
         if (id == 1){
-            Fragment fragmen = new GiverFragment();
+            Fragment fragmen = new AddListingFragment();
             FragmentManager fmanger = getSupportFragmentManager();
             FragmentTransaction transaction = fmanger.beginTransaction();
             transaction.replace(R.id.main_view_pager, fragmen);
@@ -130,7 +129,7 @@ public class MainActivity extends AppCompatActivity{
             mainViewPager.setCurrentItem(1);//
 
             Intent i=new Intent();
-            i.setClass(MainActivity.this,GiverFragment.class);
+            i.setClass(MainActivity.this, AddListingFragment.class);
             i.putExtra("id",1);
         }
         if (id == 2) {

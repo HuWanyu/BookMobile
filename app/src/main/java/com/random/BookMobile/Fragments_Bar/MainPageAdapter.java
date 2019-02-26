@@ -16,7 +16,7 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new HomePageFragment();
             case 1:
-                return new GiverFragment();
+                return new AddListingFragment();
             case 2:
                 return new ProfileFragment();
                 default: return new HomePageFragment();

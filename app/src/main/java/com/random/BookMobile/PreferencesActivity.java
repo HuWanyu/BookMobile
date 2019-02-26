@@ -44,6 +44,7 @@ public class PreferencesActivity extends AppCompatActivity {
 
                 if(cbSciFi.isChecked())
                 {
+                    // testing git merge
                     String scifi = cbSciFi.getText().toString();
                     Toast.makeText(getApplicationContext(), scifi+" selected", Toast.LENGTH_SHORT).show();
                 }

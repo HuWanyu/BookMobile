@@ -13,5 +13,9 @@ import android.widget.TextView;
 
 
 
-public class GiverFragment extends Fragment implements View.OnClickListener {
+public class AddListingFragment extends Fragment implements View.OnClickListener {
+    @Override
+    public void onClick(View v) {
+
+    }
 }
