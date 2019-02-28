@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity{
         mainViewPager.setAdapter(mainPageAdapter);
 
         mainNav = findViewById(R.id.main_page);
+        mainNav.setSelectedItemId(R.id.mainNav_Home);
         mainNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         toggleHideyBar();
 
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity{
                     mainViewPager.setCurrentItem(3);
                     return true;
                 default:
+                    mainViewPager.setCurrentItem(1);
                     return true;
             }
         }
@@ -117,7 +119,7 @@ public class MainActivity extends AppCompatActivity{
             FragmentTransaction transaction = fmanger.beginTransaction();
             transaction.replace(R.id.main_view_pager, fragmen);
             transaction.commit();
-            mainViewPager.setCurrentItem(0);//
+            mainViewPager.setCurrentItem(1);//
 
             Intent i=new Intent();
             i.setClass(MainActivity.this,HomePageFragment.class);
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity{
             FragmentTransaction transaction = fmanger.beginTransaction();
             transaction.replace(R.id.main_view_pager, fragmen);
             transaction.commit();
-            mainViewPager.setCurrentItem(1);//
+            mainViewPager.setCurrentItem(0);//
 
             Intent i=new Intent();
             i.setClass(MainActivity.this, AddListingFragment.class);

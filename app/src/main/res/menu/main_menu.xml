@@ -28,7 +28,7 @@
     <item
         android:id="@+id/mainNav_Chat"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_myplaces"
+        android:icon="@drawable/chat"
         android:title="Chat"
         android:visible="true"
         app:showAsAction="withText" />
