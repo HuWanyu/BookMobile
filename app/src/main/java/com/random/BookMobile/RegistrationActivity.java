@@ -30,8 +30,7 @@ public class RegistrationActivity extends AppCompatActivity{
     /**
      * need to import the database and check all the database methods
      */
-    private AccountDBHelper mDbHelper;
-    private DatabaseHelp dbHelper = new DatabaseHelp(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +42,7 @@ public class RegistrationActivity extends AppCompatActivity{
         mRegiterSubmitBtn = findViewById(R.id.registerButton);
         mCancelBtn = findViewById(R.id.cancelButton);
 
-        mDbHelper = new AccountDBHelper(this);
+
 
         mRegiterSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,30 +63,14 @@ public class RegistrationActivity extends AppCompatActivity{
         });
     }
 
-    private boolean checkUsername(String Username){          //returns 0 if Username doesnt exist, returns 1 if it does
-        if(!InputValidator.ValidateUserNameInput(Username)&&Username.length()<=15 && Username.length()>=6){
+    private boolean checkUsername(String Username) {          //returns 0 if Username doesnt exist, returns 1 if it does
+        if (!InputValidator.ValidateUserNameInput(Username) && Username.length() <= 15 && Username.length() >= 6) {
             Toast.makeText(this, "Error: the Username is not valid, it should contain alphabets and numbers only", Toast.LENGTH_LONG).show();
             return false;
         }
+        return true;
+    }
 
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String query = "Select * from User Where Username = '"+ Username +"'";
-        Cursor c = db.rawQuery(query,null);
-
-
-        if (c.getCount() > 0) {
-            Log.d("Register counts", String.valueOf(c.getCount()));
-            c.close();
-            db.close();
-            Toast.makeText(this, "Error: the Username already Exits, pleasae try another one", Toast.LENGTH_LONG).show();
-            return false;
-        }
-        else{
-            c.close();
-            db.close();
-            return true;
-        }
-    } //end
 
     private boolean checkPassword(String password){
         if(!InputValidator.ValidatePasswordInput(password) && password.length() >= 6){
@@ -102,20 +85,7 @@ public class RegistrationActivity extends AppCompatActivity{
             Toast.makeText(this, "Error: the email is not valid", Toast.LENGTH_LONG).show();
             return false;
         }
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String query = "Select * from User Where Email = '"+ Email +"'";
-        Cursor c = db.rawQuery(query,null);
-        if (c.getCount() > 0) {
-            c.close();
-            db.close();
-            Toast.makeText(this, "Error: the email has already been used, pleasae try another one", Toast.LENGTH_LONG).show();
-            return false;
-        }
-        else{
-            c.close();
-            db.close();
-            return true;
-        }
+       return true;
     } //end
 
     private boolean checkAccountInfoEligibility(String username, String password, String email){
@@ -132,27 +102,10 @@ public class RegistrationActivity extends AppCompatActivity{
         // Create database helper
 
 
-        // Gets the database in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        // Create a ContentValues object where column names are the keys,
-        // and pet attributes from the editor are the values.
-        ContentValues accountValues = new ContentValues();
-        accountValues.put(AccountEntry.COLUMN_USERNAME, username);
-        accountValues.put(AccountEntry.COLUMN_PASSWORD, password);
-        accountValues.put(AccountEntry.COLUMN_EMAIL, email);
-        accountValues.put(AccountEntry.COLUMN_AVATAR, 1);
-
-        // Insert a new row for pet in the database, returning the ID of that new row.
-        long newRowId = db.insert(AccountEntry.TABLE_NAME, null, accountValues);
-        // Show a toast message depending on whether or not the insertion was successful
-        if (newRowId == -1) {
-            // If the row ID is -1, then there was an error with insertion.
-            Toast.makeText(this, "Error with Account Creating", Toast.LENGTH_SHORT).show();
-        } else {
             // Otherwise, the insertion was successful and we can display a toast with the row ID.
             Toast.makeText(this, "Account Successfully Created", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, PreferencesActivity.class));
         }
     }
-}
+
