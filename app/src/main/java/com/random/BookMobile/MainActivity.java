@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity{
             FragmentTransaction transaction = fmanger.beginTransaction();
             transaction.replace(R.id.main_view_pager, fragmen);
             transaction.commit();
-            mainViewPager.setCurrentItem(1);//
+            mainViewPager.setCurrentItem(1);
 
             Intent i=new Intent();
             i.setClass(MainActivity.this,HomePageFragment.class);
