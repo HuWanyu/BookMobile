@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.random.BookMobile.Fragments_Bar.AddListingFragment;
+import com.random.BookMobile.Fragments_Bar.ChatFragment;
 import com.random.BookMobile.Fragments_Bar.HomePageFragment;
 import com.random.BookMobile.Fragments_Bar.MainPageAdapter;
 import com.random.BookMobile.Fragments_Bar.ProfileFragment;
@@ -148,6 +149,20 @@ public class MainActivity extends AppCompatActivity{
             Intent i=new Intent();
             i.setClass(MainActivity.this,ProfileFragment.class);
             i.putExtra("id",2);
+        }
+
+        if (id == 3) {
+            Fragment fragmen = new ChatFragment();
+            FragmentManager fmanger = getSupportFragmentManager();
+            FragmentTransaction transaction = fmanger.beginTransaction();
+            transaction.replace(R.id.main_view_pager, fragmen);
+            transaction.commit();
+            mainViewPager.setCurrentItem(3);//
+
+            Intent i=new Intent();
+            i.setClass(MainActivity.this,ChatFragment.class);
+            i.putExtra("id",3);
+            Log.d("Reached Chat Fragment", "Chat Frag open");
         }
         super.onResume();
     }

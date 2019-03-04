@@ -1,4 +1,4 @@
-package com.random.BookMobile.ChatActivity;
+package com.random.BookMobile.Fragments_Bar;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.random.BookMobile.ChatActivity;
+package com.random.BookMobile.Fragments_Bar;
 
 public class Message {
     private String text;
