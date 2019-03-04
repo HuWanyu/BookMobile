@@ -1,9 +1,7 @@
 package com.random.BookMobile.ChatActivity;
 
-
 import android.net.sip.SipAudioCall;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -17,7 +15,6 @@ import com.scaledrone.lib.Room;
 import com.scaledrone.lib.RoomListener;
 import com.scaledrone.lib.Scaledrone;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scaledrone.lib.Listener;
@@ -28,7 +25,7 @@ import java.util.Random;
 
 public class chatPage extends AppCompatActivity implements RoomListener {
 
-    private String channelID = "XL6DhtGjkwteTGrq";
+    private String channelID = "saPvriGVIHdbBZna";
     private String roomName = "BookMobile";
     private EditText editText;
     private Scaledrone scaledrone;
@@ -41,7 +38,6 @@ public class chatPage extends AppCompatActivity implements RoomListener {
         setContentView(R.layout.fragment_chat);
 
         editText = (EditText) findViewById(R.id.editText);
-
         messageAdapter = new MessageAdapter(this);
         messagesView = (ListView) findViewById(R.id.messages_view);
         messagesView.setAdapter(messageAdapter);
@@ -80,24 +76,25 @@ public class chatPage extends AppCompatActivity implements RoomListener {
             editText.getText().clear();
         }
     }
-
+//Successfully connected to Scaledrone room
     @Override
     public void onOpen(Room room) {
         System.out.println("Conneted to room");
     }
-
+    // Connecting to Scaledrone room failed
     @Override
     public void onOpenFailure(Room room, Exception ex) {
         System.err.println(ex);
     }
-
+    // Received a message from Scaledrone room
     @Override
     public void onMessage(Room room, com.scaledrone.lib.Message receivedMessage) {
         final ObjectMapper mapper = new ObjectMapper();
+        final com.random.BookMobile.ChatActivity.Message message;
         try {
             final MemberData data = mapper.treeToValue(receivedMessage.getMember().getClientData(), MemberData.class);
             boolean belongsToCurrentUser = receivedMessage.getClientID().equals(scaledrone.getClientID());
-            final com.random.BookMobile.ChatActivity.Message message = new Message(receivedMessage.getData().asText(), data, belongsToCurrentUser);
+            message = new Message(receivedMessage.getData().asText(), data, belongsToCurrentUser);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
