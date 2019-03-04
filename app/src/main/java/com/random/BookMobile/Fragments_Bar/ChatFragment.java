@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,6 +30,7 @@ public class ChatFragment extends Fragment implements RoomListener {
     private Scaledrone scaledrone;
     private MessageAdapter messageAdapter;
     private ListView messagesView;
+    ImageButton sendBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,10 +38,16 @@ public class ChatFragment extends Fragment implements RoomListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat,container,false);
         editText = (EditText) view.findViewById(R.id.editText);
-        messageAdapter = new MessageAdapter(getContext());
+        messageAdapter = new MessageAdapter(getActivity());
         messagesView = (ListView) view.findViewById(R.id.messages_view);
         messagesView.setAdapter(messageAdapter);
-
+        sendBtn = view.findViewById(R.id.sendBtn);
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage();
+            }
+        });
         MemberData data = new MemberData(getRandomName(), getRandomColor());
 
         scaledrone = new Scaledrone(channelID, data);
@@ -71,8 +79,9 @@ public class ChatFragment extends Fragment implements RoomListener {
 
     }
 
-    public void sendMessage(View view) {
+    public void sendMessage() {
         String message = editText.getText().toString();
+        Log.v("SENT", message);
         if (message.length() > 0) {
             scaledrone.publish(roomName, message);
             editText.getText().clear();
@@ -91,9 +100,11 @@ public class ChatFragment extends Fragment implements RoomListener {
     // Received a message from Scaledrone room
     @Override
     public void onMessage(Room room, com.scaledrone.lib.Message receivedMessage) {
+
         final ObjectMapper mapper = new ObjectMapper();
         final Message message;
         try {
+            Log.v("starting try", receivedMessage.getData().asText());
             final MemberData data = mapper.treeToValue(receivedMessage.getMember().getClientData(), MemberData.class);
             boolean belongsToCurrentUser = receivedMessage.getClientID().equals(scaledrone.getClientID());
             message = new Message(receivedMessage.getData().asText(), data, belongsToCurrentUser);
