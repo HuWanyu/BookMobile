@@ -67,14 +67,99 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
     private void validateUser(String username, String password){
-        Log.d(TAG, "Login button is clicked");
+ /*       Log.d(TAG, "Login button is clicked"); //un-comment after database is set up
+        SQLiteDatabase accountDB = mAccountHelper.getReadableDatabase();
 
-                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent loginSuccessIntent = new Intent(this, MainActivity.class);
-                    startActivity(loginSuccessIntent);
+        String[] accountProjection = {
+                AccountEntry._ID,
+                AccountEntry.COLUMN_USERNAME,
+                AccountEntry.COLUMN_PASSWORD,
+                AccountEntry.COLUMN_AVATAR,
+                AccountEntry.COLUMN_EMAIL
+        };
+
+        Cursor cursor = accountDB.query(
+                AccountEntry.TABLE_NAME,
+                accountProjection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        int usernameIndex = cursor.getColumnIndex(AccountEntry.COLUMN_USERNAME);
+        int passwordIndex = cursor.getColumnIndex(AccountEntry.COLUMN_PASSWORD);
+        int emailIndex = cursor.getColumnIndex(AccountEntry.COLUMN_EMAIL);
+        int avatarIndex = cursor.getColumnIndex(AccountEntry.COLUMN_AVATAR);
+        int userIDIndex = cursor.getColumnIndex(AccountEntry._ID);
+
+        while (cursor.moveToNext()) {
+            String currentUsername = cursor.getString(usernameIndex);
+            String currentPassword = cursor.getString(passwordIndex);
+            int currentAvatarChoice = cursor.getInt(avatarIndex);
+            String currentEmail = cursor.getString(emailIndex);
+            int currentUserID = cursor.getInt(userIDIndex);
+            Log.d(TAG, "current username is " + currentUsername + " current password is "+currentPassword);
 
 
+            if (username.equals(currentUsername) && password.equals(currentPassword)) {
+                mCurrentUsername = currentUsername;
+                mCurrentPassword = currentPassword;
+                mCurrentAvatarChoice = currentAvatarChoice;
+                mCurrentEmail = currentEmail;
+                mCurrentUserID = currentUserID;
+  */              Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
+                Intent loginSuccessIntent = new Intent(this, MainActivity.class);
+                startActivity(loginSuccessIntent);
+            }
+  /*          else{
+                Toast.makeText(this, "Username not found or username and password does not match.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+*/
+    public static void UpdateUserInfo(String updateType, String updateValue){
+ /*      SQLiteDatabase accountDB = mAccountHelper.getReadableDatabase();
 
+        String[] accountProjection = {
+                AccountEntry._ID,
+                AccountEntry.COLUMN_USERNAME,
+                AccountEntry.COLUMN_PASSWORD,
+                AccountEntry.COLUMN_EMAIL,
+                AccountEntry.COLUMN_AVATAR,
+        };
+
+        Cursor cursor = accountDB.query(
+                AccountEntry.TABLE_NAME,
+                accountProjection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        int usernameIndex = cursor.getColumnIndex(AccountEntry.COLUMN_USERNAME);
+        int idIndex = cursor.getColumnIndex(AccountEntry._ID);
+        while(cursor.moveToNext()){
+            if (cursor.getString(usernameIndex).equals(mCurrentUsername)){
+                int id = cursor.getInt(idIndex);
+                ContentValues update = new ContentValues();
+                if(updateType==AccountEntry.COLUMN_AVATAR)
+                    update.put(updateType, Integer.parseInt(updateValue));
+                else
+                    update.put(updateType,updateValue);
+                accountDB.update(AccountEntry.TABLE_NAME, update, AccountEntry._ID  + " = " + String.valueOf(id), null);
+            }
+
+        }
+        if (updateType == AccountEntry.COLUMN_EMAIL){
+            updateEmail(updateValue);
+        }
+        if (updateType == AccountEntry.COLUMN_AVATAR){
+            updateAvatar(Integer.parseInt(updateValue));
+        }
+*/
     }
 
 
