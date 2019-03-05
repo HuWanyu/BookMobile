@@ -73,14 +73,14 @@ public class MeChangePersonalInfo extends AppCompatActivity {
                 newEmail = Email.getText().toString();
 
                 if(!newEmail.equals(""))
-                    LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_EMAIL,newEmail);
+//                    LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_EMAIL,newEmail);
 
 
                 if(!newPassword.equals(""))
-                    LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_PASSWORD,newPassword);
+ //                   LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_PASSWORD,newPassword);
 
                 if(InputValidator.ValidatePasswordInput(newPassword)) {
-                    Toast.makeText(getBaseContext(), "password changed", Toast.LENGTH_LONG).show();LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_PASSWORD, newPassword);
+ //                   Toast.makeText(getBaseContext(), "password changed", Toast.LENGTH_LONG).show();LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_PASSWORD, newPassword);
                 }
 
 
