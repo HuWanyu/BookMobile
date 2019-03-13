@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,29 +25,36 @@ import com.random.BookMobile.Fragments_Bar.MainPageAdapter;
 
 public class GeneralBookDetailFragment extends AppCompatDialogFragment {
     public static ViewPager mainViewPager;
-
+    public static int REQUEST_CODE = 0;
     TextView bookTitle;
     TextView bookSummary;
     TextView copiesNo;
     TextView takersNo;
     Button lotfButton;
+    View customView;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
+    {
+        return customView;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        //create view
-        View v = LayoutInflater.from(getActivity())
+
+        customView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.gen_book_details_layout, null);
         mainViewPager = getActivity().findViewById(R.id.main_view_pager);
-
         lotfButton = getActivity().findViewById(R.id.lotf);
         String buttonText = lotfButton.getText().toString();
-        bookTitle = v.findViewById(R.id.bookTitleText);
+        bookTitle = customView.findViewById(R.id.bookTitleText);
         bookTitle.setText(buttonText);
 
-        bookSummary = v.findViewById(R.id.bookSummary);
+        bookSummary = customView.findViewById(R.id.bookSummary);
         bookSummary.setText("The story of a few boys stranded on an island.");
 
-        copiesNo = v.findViewById(R.id.copiesNo);
-        takersNo = v.findViewById(R.id.takersNo);
+        copiesNo = customView.findViewById(R.id.copiesNo);
+        takersNo = customView.findViewById(R.id.takersNo);
 
         //button listener
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -56,26 +64,26 @@ public class GeneralBookDetailFragment extends AppCompatDialogFragment {
                 switch(which)
                 {
                     case DialogInterface.BUTTON_POSITIVE:
-                       takerCount++;
+                        takerCount++;
                         Toast.makeText(getContext(), "Number of Takers increased to "+takerCount, Toast.LENGTH_SHORT).show();
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         dismiss();
-
-                       /* // Create new fragment and transaction
-                        Fragment newFragment = new AddListingFragment();
+                        // Create new fragment and transaction
+                        AddListingFragment newFragment = new AddListingFragment();
                         // consider using Java coding conventions (upper first char class names!!!)
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        FragmentTransaction transaction = getParentFragment().getFragmentManager().beginTransaction();
                         // Replace whatever is in the fragment_container view with this fragment,
                         // and add the transaction to the back stack
+                        if(newFragment.getView() !=null)
                         transaction.replace(R.id.main_view_pager, newFragment);
                         transaction.addToBackStack(null);
 
                         // Commit the transaction
                         transaction.commit();
                         BottomNavigationView mainNav=getActivity().findViewById(R.id.main_page);
-                        mainNav.setSelectedItemId(R.id.mainNav_AddListing);*/
-                        //mainViewPager.setCurrentItem(0);
+                        mainNav.setSelectedItemId(R.id.mainNav_AddListing);
+                        mainViewPager.setCurrentItem(0);
                         break;
 
                 }
@@ -83,12 +91,13 @@ public class GeneralBookDetailFragment extends AppCompatDialogFragment {
                 Log.i("Tag", "You clicked the dialog button");
             }
         };
-        //build the alert dialog
+
         return new AlertDialog.Builder(getActivity())
                 .setTitle("Book Details")
-                .setView(v)
+                .setView(customView)
                 .setPositiveButton("Take It!", listener)
                 .setNegativeButton("List It!", listener)
                 .create();
     }
 }
+

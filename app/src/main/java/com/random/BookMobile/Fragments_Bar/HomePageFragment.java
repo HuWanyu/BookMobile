@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,13 @@ public class HomePageFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 GeneralBookDetailFragment dialog = new GeneralBookDetailFragment();
-                dialog.show(getFragmentManager(), "Book Details");
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("Book Details");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                dialog.show(getChildFragmentManager(), "Book Details");
                 Log.i("TAG", "Just showed dialog");
             }
         });
