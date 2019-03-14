@@ -9,7 +9,7 @@
     <ScrollView
         android:id="@+id/ranking"
         android:layout_width="367dp"
-        android:layout_height="499dp"
+        android:layout_height="494dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.961">
 
         <view
-            android:id="@+id/booksListRV"
+            android:id="@+id/MeBookListRV"
             class="android.support.v7.widget.RecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/bookslist"
+        android:id="@+id/booklist"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
@@ -43,7 +43,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Event List"
+        android:text="My Books"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/ranking"
         app:layout_constraintEnd_toEndOf="parent"
