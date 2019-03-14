@@ -8,15 +8,17 @@ import android.view.inputmethod.ExtractedTextRequest;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class MyListAdapter extends ArrayAdapter {
 
     private final Activity context;
-    private final String[] giversNames;
-    private final String[] bookCond;
-    private final String[] timings;
-    private final int[] costs;
+    private final ArrayList<String> giversNames;
+    private final ArrayList<String> bookCond;
+    private final ArrayList<String> timings;
+    private final ArrayList<Integer> costs;
 
-    public MyListAdapter(Activity context, String[] giversNames,String[] bookCond, String[] timings, int[] costs) {
+    public MyListAdapter(Activity context, ArrayList<String> giversNames, ArrayList<String> bookCond, ArrayList<String> timings, ArrayList<Integer> costs) {
         super(context, R.layout.mylist, giversNames);
         // TODO Auto-generated constructor stub
 
@@ -37,10 +39,10 @@ public class MyListAdapter extends ArrayAdapter {
         TextView prefTiming = (TextView) rowView.findViewById(R.id.timing);
         TextView creditCost = (TextView) rowView.findViewById(R.id.cost);
 
-        giversName.setText(giversNames[position]);
-        bookCondition.setText(bookCond[position]);
-        prefTiming.setText(timings[position]);
-        creditCost.setText(String.valueOf(costs[position]));
+        giversName.setText(giversNames.get(position));
+        bookCondition.setText(bookCond.get(position));
+        prefTiming.setText(timings.get(position));
+        creditCost.setText(String.valueOf(costs.get(position)));
 
         return rowView;
 

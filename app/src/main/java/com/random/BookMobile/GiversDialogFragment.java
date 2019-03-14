@@ -16,50 +16,104 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.random.BookMobile.Fragments_Bar.AddListingFragment;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class GiversDialogFragment extends AppCompatDialogFragment {
     View customView;
-
+    private RequestQueue mQueue;
     ListView list;
 
-    String[] giversNames ={
-            "Prash", "Yi Hao", "Wan Yu"
-    };
+    ArrayList<String> giversNames = new ArrayList<>();
+    ArrayList<String> bookCond = new ArrayList<>();
+    ArrayList<String> timings = new ArrayList<>();
+    ArrayList<Integer> costs = new ArrayList<>();
 
-    String[] bookCond ={
-           "New", "Old", "Satisfactory"
-    };
-
-    String[] timings ={
-            "12pm","2pm","4pm"
-    };
-
-    int[] costs ={
-          3,4,5
-    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+
         return customView;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        mQueue = Volley.newRequestQueue(getActivity());
+        //get data from server
+        getData();
+        Log.d("givers names", "giver names"+giversNames.toString());
         customView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.givers_list, null);
-
-        MyListAdapter adapter=new MyListAdapter(getActivity(), giversNames, bookCond,timings,costs);
-        list=customView.findViewById(R.id.my_list);
-        list.setAdapter(adapter);
-
         //custom Dialog Title
         TextView customText = new TextView(getContext());
         customText.setTextSize(30);
         customText.setText("Pick A Giver:");
         customText.setPadding(50,50,10,10);
+
+        return new AlertDialog.Builder(getActivity())
+                .setCustomTitle(customText)
+                .setView(customView)
+                .create();
+    }
+
+    private void getData() {
+
+        String url = "https://api.myjson.com/bins/ig2di";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("employees");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject employee = jsonArray.getJSONObject(i);
+
+                                String giverName = employee.getString("name");
+                                String bookCondition = employee.getString("email");
+                                String timing = employee.getString("timings");
+                                int cost = employee.getInt("age");
+
+                                giversNames.add(giverName);
+                                bookCond.add(bookCondition);
+                                timings.add(timing);
+                                costs.add(cost);
+
+                            }
+                            Log.d("givers names 2", "giver names"+giversNames.toString());
+                            populateList();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        mQueue.add(request);
+    }
+
+    private void populateList() {
+        //populate List
+        MyListAdapter adapter=new MyListAdapter(getActivity(), giversNames, bookCond,timings,costs);
+        list=customView.findViewById(R.id.my_list);
+        list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -68,27 +122,20 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
                 // TODO Auto-generated method stub
                 if(position == 0) {
                     //code specific to first list item
-                    Toast.makeText(getContext(),"Giver selected:"+giversNames[0],Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Giver selected:"+giversNames.get(0),Toast.LENGTH_SHORT).show();
                 }
 
                 else if(position == 1) {
                     //code specific to 2nd list item
-                    Toast.makeText(getContext(),"Giver selected:"+giversNames[1],Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Giver selected:"+giversNames.get(1),Toast.LENGTH_SHORT).show();
                 }
 
                 else if(position == 2) {
 
-                    Toast.makeText(getContext(),"Giver selected:"+giversNames[2],Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Giver selected:"+giversNames.get(2),Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
-
-
-
-        return new AlertDialog.Builder(getActivity())
-                .setCustomTitle(customText)
-                .setView(customView)
-                .create();
     }
 }
