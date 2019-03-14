@@ -18,6 +18,8 @@
 	<activity android:name=".PreferencesActivity">
     </activity>
 
+        <activity android:name=".MeActivity.MeChangePersonalInfo"></activity>
+        <activity android:name=".MeActivity.BooksInfoList"></activity>
 	<activity android:name=".RegistrationActivity"></activity>
         <activity android:name=".MainActivity"
                   android:configChanges="orientation"
