@@ -39,6 +39,8 @@ public class DetailPage extends AppCompatActivity {
         bookID = Integer.parseInt(intent.getStringExtra("BookID"));
         userID = LoginActivity.getUserID();
 
+//uncomment this part after database has set up
+
  /*       DatabaseHelp dbHelper = new DatabaseHelp(this);
         Cursor eventCursor = dbHelper.viewEvent(bookID);
 
