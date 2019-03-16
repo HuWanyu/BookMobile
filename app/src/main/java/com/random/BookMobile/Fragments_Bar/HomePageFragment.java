@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.random.BookMobile.GeneralBookDetailFragment;
@@ -37,13 +38,12 @@ public class HomePageFragment extends Fragment{
             welcomeText.append(newUser);
         }
 
-
-        // Code that adds buttons programmatically - will be used when generating new recommended books
-        /*Button myButton = new Button(this);
+       // Code that adds buttons programmatically - will be used when generating new recommended books
+   /*     Button myButton = new Button(getContext());
         myButton.setText("Push Me");
 
-        LinearLayout ll = (LinearLayout)findViewById(R.id.buttonLayoutRec);
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        LinearLayout ll = (LinearLayout) v.findViewById(R.id.buttonLayoutRec);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         ll.addView(myButton, lp);*/
 
         lotfButton = v.findViewById(R.id.lotf);

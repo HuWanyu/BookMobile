@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
     private RequestQueue mQueue;
 
     ListView list;
-
+    ProgressBar progressBar;
     ArrayList<String> giversNames = new ArrayList<>();
     ArrayList<String> bookCond = new ArrayList<>();
     ArrayList<String> timings = new ArrayList<>();
@@ -47,7 +48,6 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-
         return customView;
     }
 
@@ -55,15 +55,17 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         mQueue = Volley.newRequestQueue(getActivity());
+        customView = LayoutInflater.from(getActivity())
+                .inflate(R.layout.givers_list, null);
+        //for loading animations
+        progressBar = customView.findViewById(R.id.progressBar);
         //get data from server
         getData();
         Log.d("givers names", "giver names"+giversNames.toString());
-        customView = LayoutInflater.from(getActivity())
-                .inflate(R.layout.givers_list, null);
         //custom Dialog Title
         TextView customText = new TextView(getContext());
         customText.setTextSize(30);
-        customText.setText("Pick A Giver:");
+        customText.setText("Pick a Giver:");
         customText.setPadding(50,50,10,10);
 
         return new AlertDialog.Builder(getActivity())
@@ -74,19 +76,12 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
 
     private void getData() {
         String url = "https://api.myjson.com/bins/ig2di";
-        final AlertDialog waitingDialog = new SpotsDialog.Builder()
-                .setContext(getActivity())
-                .setMessage("Loading Givers..")
-                .setCancelable(false)
-                .build();
-        waitingDialog.show();
-
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            waitingDialog.dismiss();
+
                             JSONArray jsonArray = response.getJSONArray("employees");
 
                             for (int i = 0; i < jsonArray.length(); i++) {
@@ -105,8 +100,8 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
                             }
                             Log.d("givers names 2", "giver names"+giversNames.toString());
                             populateList();
+                            progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
-                            waitingDialog.dismiss();
                             e.printStackTrace();
                         }
                     }

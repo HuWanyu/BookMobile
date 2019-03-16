@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        waitingDialog.dismiss();
+
                         try {
                             JSONObject validateObj = response.getJSONObject("loginValid");
                             String status = validateObj.getString("status");
@@ -111,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent loginSuccessIntent = new Intent(LoginActivity.this, MainActivity.class);
                                 loginSuccessIntent.putExtra("loginUser", username);
                                 startActivity(loginSuccessIntent);
+                                waitingDialog.dismiss();
                             }
 
                         } catch (JSONException e) {
