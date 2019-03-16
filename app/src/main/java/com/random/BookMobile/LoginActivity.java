@@ -1,5 +1,7 @@
 package com.random.BookMobile;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,7 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.random.BookMobile.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import dmax.dialog.SpotsDialog;
 /**
  *  remember to import the database
  */
@@ -26,6 +40,10 @@ public class LoginActivity extends AppCompatActivity {
     private Button mLoginBtn;
     private EditText mUsername;
     private EditText mPassword;
+
+    public String username;
+    public String password;
+    private RequestQueue mQueue;
 
     private static String mCurrentUsername;
     private static String mCurrentPassword;
@@ -60,13 +78,56 @@ public class LoginActivity extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = mUsername.getText().toString().trim();
-                String password = mPassword.getText().toString().trim();
+                username = mUsername.getText().toString().trim();
+                password = mPassword.getText().toString().trim();
                 validateUser(username, password);
             }
         });
     }
-    private void validateUser(String username, String password){
+    public void validateUser(final String username, String password){
+        mQueue = Volley.newRequestQueue(LoginActivity.this);
+        String url = "https://api.myjson.com/bins/1ayd4u";
+
+
+        final AlertDialog waitingDialog = new SpotsDialog.Builder()
+                .setContext(LoginActivity.this)
+                .setMessage("Validating User...")
+                .setCancelable(false)
+                .build();
+        waitingDialog.show();
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        waitingDialog.dismiss();
+                        try {
+                            JSONObject validateObj = response.getJSONObject("loginValid");
+                            String status = validateObj.getString("status");
+                            Log.d("LOGIN STATUS", "Login Status:"+status);
+
+                            if(status.equals("okay")) {
+                                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                Intent loginSuccessIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                loginSuccessIntent.putExtra("loginUser", username);
+                                startActivity(loginSuccessIntent);
+                            }
+
+                        } catch (JSONException e) {
+                            waitingDialog.dismiss();
+
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        mQueue.add(request);
+
+
  /*       Log.d(TAG, "Login button is clicked"); //un-comment after database is set up
         SQLiteDatabase accountDB = mAccountHelper.getReadableDatabase();
 
@@ -109,9 +170,7 @@ public class LoginActivity extends AppCompatActivity {
                 mCurrentAvatarChoice = currentAvatarChoice;
                 mCurrentEmail = currentEmail;
                 mCurrentUserID = currentUserID;
-  */              Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
-                Intent loginSuccessIntent = new Intent(this, MainActivity.class);
-                startActivity(loginSuccessIntent);
+  */
             }
   /*          else{
                 Toast.makeText(this, "Username not found or username and password does not match.", Toast.LENGTH_SHORT).show();

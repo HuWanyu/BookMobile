@@ -30,9 +30,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import dmax.dialog.SpotsDialog;
+
 public class GiversDialogFragment extends AppCompatDialogFragment {
     View customView;
     private RequestQueue mQueue;
+
     ListView list;
 
     ArrayList<String> giversNames = new ArrayList<>();
@@ -70,14 +73,20 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
     }
 
     private void getData() {
-
         String url = "https://api.myjson.com/bins/ig2di";
+        final AlertDialog waitingDialog = new SpotsDialog.Builder()
+                .setContext(getActivity())
+                .setMessage("Loading Givers..")
+                .setCancelable(false)
+                .build();
+        waitingDialog.show();
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            waitingDialog.dismiss();
                             JSONArray jsonArray = response.getJSONArray("employees");
 
                             for (int i = 0; i < jsonArray.length(); i++) {
@@ -97,6 +106,7 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
                             Log.d("givers names 2", "giver names"+giversNames.toString());
                             populateList();
                         } catch (JSONException e) {
+                            waitingDialog.dismiss();
                             e.printStackTrace();
                         }
                     }

@@ -27,6 +27,12 @@ public class PreferencesActivity extends AppCompatActivity {
         cbPhil = findViewById(R.id.checkBoxPhil);
         cbSciFi = findViewById(R.id.checkBoxSciFi);
 
+        final String username = getIntent().getStringExtra("newUser");
+        String password = getIntent().getStringExtra("Pass");
+        String email = getIntent().getStringExtra("Email");
+
+        Toast.makeText(this, username+""+password+""+email, Toast.LENGTH_SHORT).show();
+
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,8 +55,9 @@ public class PreferencesActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), scifi+" selected", Toast.LENGTH_SHORT).show();
                 }
 
-                Toast.makeText(getApplicationContext(), "Account Successfully Created", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Welcome to BookMobile, "+username, Toast.LENGTH_LONG).show();
                 Intent jumpToExplore = new Intent(getBaseContext(), MainActivity.class);
+                jumpToExplore.putExtra("newUser", username);
                 startActivity(jumpToExplore);
             }
         });

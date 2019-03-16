@@ -97,15 +97,13 @@ public class RegistrationActivity extends AppCompatActivity{
     }
 
     private void createNewAccount(String username, String password, String email){
-        if(!checkAccountInfoEligibility(username, password, email))
-            return;
-        // Create database helper
-
-
-
-            // Otherwise, the insertion was successful and we can display a toast with the row ID.
-            Toast.makeText(this, "Account Successfully Created", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, PreferencesActivity.class));
+            //transfer user input to preferences activity first
+            Intent toPreferences = new Intent(this, PreferencesActivity.class);
+            Bundle bundle = new Bundle();
+            toPreferences.putExtra("newUser", username);
+            toPreferences.putExtra("Pass", password);
+            toPreferences.putExtra("Email", email);
+            startActivity(toPreferences);
         }
     }
 
