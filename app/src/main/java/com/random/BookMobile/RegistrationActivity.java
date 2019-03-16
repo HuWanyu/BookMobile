@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.random.BookMobile.Input_Validator.InputValidator;
 import com.random.BookMobile.R;
 
+import es.dmoral.toasty.Toasty;
+
 public class RegistrationActivity extends AppCompatActivity{
     private EditText mUsername;
     private EditText mPassword;
@@ -41,8 +43,6 @@ public class RegistrationActivity extends AppCompatActivity{
 
         mRegiterSubmitBtn = findViewById(R.id.registerButton);
         mCancelBtn = findViewById(R.id.cancelButton);
-
-
 
         mRegiterSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +65,7 @@ public class RegistrationActivity extends AppCompatActivity{
 
     private boolean checkUsername(String Username) {          //returns 0 if Username doesnt exist, returns 1 if it does
         if (!InputValidator.ValidateUserNameInput(Username) && Username.length() <= 15 && Username.length() >= 6) {
-            Toast.makeText(this, "Error: the Username is not valid, it should contain alphabets and numbers only", Toast.LENGTH_LONG).show();
+            Toasty.error(this, "Error: the Username is not valid, it should contain alphabets and numbers only", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
@@ -74,7 +74,7 @@ public class RegistrationActivity extends AppCompatActivity{
 
     private boolean checkPassword(String password){
         if(!InputValidator.ValidatePasswordInput(password) && password.length() >= 6){
-            Toast.makeText(this, "Error: the password is not valid, it should contain non-space characters with length longer than 6, and it should not contain spaces", Toast.LENGTH_LONG).show();
+            Toasty.error(this, "Error: the password is not valid, it should contain non-space characters with length longer than 6, and it should not contain spaces", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
@@ -82,7 +82,7 @@ public class RegistrationActivity extends AppCompatActivity{
 
     private boolean checkEmail(String Email){          //returns 0 if Email doesnt exist, returns 1 if it does
         if(!InputValidator.ValidateEmailInput(Email) && Email.length()<=0){
-            Toast.makeText(this, "Error: the email is not valid", Toast.LENGTH_LONG).show();
+            Toasty.error(this, "Error: the email is not valid", Toast.LENGTH_LONG).show();
             return false;
         }
        return true;

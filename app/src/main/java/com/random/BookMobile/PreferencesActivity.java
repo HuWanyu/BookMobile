@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import es.dmoral.toasty.Toasty;
+
 public class PreferencesActivity extends AppCompatActivity {
 
     private Button signUpButton;
@@ -31,7 +33,7 @@ public class PreferencesActivity extends AppCompatActivity {
         String password = getIntent().getStringExtra("Pass");
         String email = getIntent().getStringExtra("Email");
 
-        Toast.makeText(this, username+""+password+""+email, Toast.LENGTH_SHORT).show();
+        Toasty.success(this, "Hello "+username+", please select your favorite genres", Toast.LENGTH_SHORT).show();
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,23 +41,23 @@ public class PreferencesActivity extends AppCompatActivity {
                 if(cbFiction.isChecked())
                 {
                     String fiction = cbFiction.getText().toString();
-                    Toast.makeText(getApplicationContext(), fiction+" selected", Toast.LENGTH_SHORT).show();
+                    Toasty.info(getApplicationContext(), fiction + " selected", Toast.LENGTH_SHORT).show();
                 }
 
                 if(cbPhil.isChecked())
                 {
                     String phil = cbPhil.getText().toString();
-                    Toast.makeText(getApplicationContext(), phil+" selected", Toast.LENGTH_SHORT).show();
+                    Toasty.info(getApplicationContext(), phil+" selected", Toast.LENGTH_SHORT).show();
                 }
 
                 if(cbSciFi.isChecked())
                 {
                     // testing git merge
                     String scifi = cbSciFi.getText().toString();
-                    Toast.makeText(getApplicationContext(), scifi+" selected", Toast.LENGTH_SHORT).show();
+                    Toasty.info(getApplicationContext(), scifi+" selected", Toast.LENGTH_SHORT).show();
                 }
 
-                Toast.makeText(getApplicationContext(), "Welcome to BookMobile, "+username, Toast.LENGTH_LONG).show();
+                Toasty.success(getApplicationContext(), "Welcome to BookMobile, "+username, Toast.LENGTH_LONG).show();
                 Intent jumpToExplore = new Intent(getBaseContext(), MainActivity.class);
                 jumpToExplore.putExtra("newUser", username);
                 startActivity(jumpToExplore);

@@ -3,9 +3,11 @@ package com.random.BookMobile;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import dmax.dialog.SpotsDialog;
+import es.dmoral.toasty.Toasty;
 /**
  *  remember to import the database
  */
@@ -84,14 +87,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    // sending to server for validation -> on response, transit to Explore Page
     public void validateUser(final String username, String password){
         mQueue = Volley.newRequestQueue(LoginActivity.this);
         String url = "https://api.myjson.com/bins/1ayd4u";
 
-
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(LoginActivity.this)
                 .setMessage("Validating User...")
+                .setTheme(R.style.Custom)
                 .setCancelable(false)
                 .build();
         waitingDialog.show();
@@ -107,15 +112,17 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("LOGIN STATUS", "Login Status:"+status);
 
                             if(status.equals("okay")) {
-                                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                waitingDialog.dismiss();
+                                Toasty.success(LoginActivity.this, "Welcome back, "+username, Toast.LENGTH_SHORT, true).show();
                                 Intent loginSuccessIntent = new Intent(LoginActivity.this, MainActivity.class);
                                 loginSuccessIntent.putExtra("loginUser", username);
                                 startActivity(loginSuccessIntent);
-                                waitingDialog.dismiss();
                             }
 
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
+
                             waitingDialog.dismiss();
+                            Toasty.error(LoginActivity.this, "Server Error!", Toast.LENGTH_SHORT, true).show();
 
                             e.printStackTrace();
                         }
@@ -123,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
                 error.printStackTrace();
             }
         });
