@@ -94,6 +94,11 @@ public class HomePageFragment extends Fragment{
         simpleSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                // Call Volley Request here
+                if(query.length()==0)
+                {
+                    searchList.setVisibility(View.INVISIBLE);
+                }
                 searchList.setVisibility(View.VISIBLE);
               String text = query;
               arrayAdapter.filter(text);
@@ -104,6 +109,10 @@ public class HomePageFragment extends Fragment{
             public boolean onQueryTextChange(String newText) {
               /*  String text = newText;
                 arrayAdapter.filter(text);*/
+              if(newText.length()==0)
+              {
+                  searchList.setVisibility(View.INVISIBLE);
+              }
                 return false;
             }
         });
