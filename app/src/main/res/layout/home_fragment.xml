@@ -133,32 +133,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Harry Potter"
-                />
 
-            <Button
-                android:id="@+id/lotf"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Lord of the flies" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="No Easy Day" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="American Psycho" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Big Data for Dummies" />
 
         </LinearLayout>
         </LinearLayout>

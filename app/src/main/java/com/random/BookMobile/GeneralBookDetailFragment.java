@@ -50,8 +50,8 @@ public class GeneralBookDetailFragment extends AppCompatDialogFragment {
         bundle = this.getArguments();
 
         mainViewPager = getActivity().findViewById(R.id.main_view_pager);
-        lotfButton = getActivity().findViewById(R.id.lotf);
-        String buttonText = lotfButton.getText().toString();
+        //lotfButton = getActivity().findViewById(R.id.lotf);
+       // String buttonText = lotfButton.getText().toString();
         bookTitle = customView.findViewById(R.id.bookTitleText);
       //  bookTitle.setText(buttonText);
 

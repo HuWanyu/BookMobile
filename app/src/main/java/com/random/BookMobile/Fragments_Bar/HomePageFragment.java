@@ -121,7 +121,7 @@ public class HomePageFragment extends Fragment{
         });
 
 
-        lotfButton = v.findViewById(R.id.lotf);
+    /*    lotfButton = v.findViewById(R.id.lotf);
         lotfButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,7 +135,7 @@ public class HomePageFragment extends Fragment{
                 dialog.show(getChildFragmentManager(), "Book Details");
                 Log.i("TAG", "Just showed dialog");
             }
-        });
+        });*/
         return v;
     }
 
