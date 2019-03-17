@@ -1,6 +1,7 @@
 package com.random.BookMobile.Fragments_Bar;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.content.Intent;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.random.BookMobile.GeneralBookDetailFragment;
 import com.random.BookMobile.LoginActivity;
@@ -34,13 +37,18 @@ import com.random.BookMobile.R;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
+
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
 
 
 public class AddListingFragment extends Fragment {
     int REQUEST_CODE = 0;
-    Button addListingButton;
+    Button addListingButton, dateButton;
     String title, condition, location, timing, price;
     private RequestQueue mQueue;
     @Override
@@ -79,11 +87,31 @@ public class AddListingFragment extends Fragment {
         timeSpinner.setAdapter(timeAdapter);
         String time = timeSpinner.getSelectedItem().toString().trim();
 
-        timing = time + ampm;
+
+       dateButton = view.findViewById(R.id.datePickerButton);
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance(TimeZone.getDefault()); // Get current date
+
+// Create the DatePickerDialog instance
+                DatePickerDialog datePicker = new DatePickerDialog(getContext(),
+                        R.style.Theme_AppCompat_Light_Dialog, datePickerListener,
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH));
+                datePicker.setCancelable(false);
+                datePicker.setTitle("Select the date");
+                datePicker.show();
+            }
+        });
+
+        timing = dateButton.getText().toString() + " "+ time + ampm;
 
         // price
         TextView pricingText = view.findViewById(R.id.priceText);
         price = pricingText.getText().toString().trim();
+
         //add listing button
         addListingButton = view.findViewById(R.id.listButton);
         addListingButton.setOnClickListener(new View.OnClickListener() {
@@ -93,13 +121,26 @@ public class AddListingFragment extends Fragment {
             }
         });
 
-
-
         return view;
 
     }
 
-    public void addListingToServer(String title, String condition, String location, String timing, String price){
+    // Listener
+    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+
+        // when dialog box is closed, below method will be called.
+        public void onDateSet(DatePicker view, int selectedYear,
+                              int selectedMonth, int selectedDay) {
+            String year1 = String.valueOf(selectedYear);
+            String month1 = String.valueOf(selectedMonth + 1);
+            String day1 = String.valueOf(selectedDay);
+            dateButton.setText(day1 + "/" + month1 + "/" + year1);
+
+        }
+    };
+
+
+    public void addListingToServer(final String title, final String condition, final String location, final String timing, final String price){
 
         mQueue = Volley.newRequestQueue(getActivity());
         // String url = "https://api.myjson.com/bins/1ayd4u";
@@ -113,15 +154,14 @@ public class AddListingFragment extends Fragment {
                 .build();
         waitingDialog.show();
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
                         try {
-                            // JSONObject validateObj = response.getJSONObject("loginValid");
-                            String user_id = response.getString("user_id");
+                            JSONObject validateObj = new JSONObject(response.toString());
+                            String user_id = validateObj.getString("user_id");
                             Log.d("LOGIN STATUS", "Username:" + user_id);
-
                             if (user_id.equals("bookmobileuser")) {
 
                             }
@@ -153,7 +193,22 @@ public class AddListingFragment extends Fragment {
                 }
                 error.printStackTrace();
             }
-        });
+        })
+        {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<>();
+                params.put("book_title", title);
+                params.put("book_condition", condition);
+                params.put("location", location);
+                params.put("timing", timing);
+                params.put("price", price);
+                return params;
+            }
+        }
+
+                ;
         mQueue.add(request);
 
     }
