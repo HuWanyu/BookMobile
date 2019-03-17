@@ -38,6 +38,7 @@ import com.random.BookMobile.R;
 import com.random.BookMobile.SearchResultAdapter;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ public class HomePageFragment extends Fragment{
     private RequestQueue mQueue;
     ArrayList<String> bookNames = new ArrayList<String>();
 
+    Bundle bundle;
+
     JSONArray localBookArray;
 
     String bookTitle, description;
@@ -71,7 +74,7 @@ public class HomePageFragment extends Fragment{
         prf = getActivity().getSharedPreferences("user_details", Context.MODE_PRIVATE);
         username = prf.getString("username",null);
         welcomeText.append(username);
-
+        bundle = new Bundle();
         //Loads recommendations by calling API
         loadRecommendations(username);
 
@@ -139,7 +142,7 @@ public class HomePageFragment extends Fragment{
     public void loadRecommendations(String username)
     {
         mQueue = Volley.newRequestQueue(getActivity());
-        String url = "https://api.myjson.com/bins/mubwm";
+        String url = "https://api.myjson.com/bins/sxtwu";
 
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(getActivity())
@@ -155,13 +158,14 @@ public class HomePageFragment extends Fragment{
                     public void onResponse(JSONObject response) {
                         try {
                             JSONArray bookArray = response.getJSONArray("Books");
-                            localBookArray = bookArray;
+                            bundle.putString("JSON bookArray", bookArray.toString());
                             for(int i=0; i<bookArray.length();i++)
                             {
                                 // Code that adds buttons programmatically - will be used when generating new recommended books
                                 JSONObject book = bookArray.getJSONObject(i);
                                 bookTitle = book.getString("title");
                                 description = book.getString("desc");
+                                // Put anything what you want
                                 Button myButton = new Button(getContext());
                                 myButton.setText(bookTitle);
                                 myButton.setTag(bookTitle);
@@ -206,10 +210,31 @@ public class HomePageFragment extends Fragment{
     }
 
     View.OnClickListener btnclick = new View.OnClickListener() {
-
         @Override
         public void onClick(View view) {
             String bookTitle = view.getTag().toString();
+            String bookDesc = "";
+           // String noOfBooksAvail = "";
+            //String noOfTakers = "";
+            try {
+                JSONArray books = new JSONArray(bundle.getString("JSON bookArray"));
+                for(int i=0; i<=books.length();i++)
+                {
+                   JSONObject book = books.getJSONObject(i);
+                   String titleOfBook = book.getString("title");
+                   if(bookTitle.equals(titleOfBook))
+                   {
+                     bookDesc = book.getString("desc");
+                   //  noOfBooksAvail = book.getString("number_books_available");
+                   //  noOfTakers = book.getString("number_books_takers");
+                   }
+                }
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
             Toasty.success(getContext(), bookTitle, Toast.LENGTH_SHORT ).show();
 
            /* SharedPreferences.Editor editor = prf.edit();
@@ -218,7 +243,10 @@ public class HomePageFragment extends Fragment{
             editor.apply();*/
 
 
-            /*GeneralBookDetailFragment dialog = new GeneralBookDetailFragment();
+            GeneralBookDetailFragment dialog = new GeneralBookDetailFragment();
+            bundle.putString("title", bookTitle);
+            bundle.putString("desc", bookDesc);
+            dialog.setArguments(bundle);
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("Book Details");
             if (prev != null) {
@@ -226,7 +254,7 @@ public class HomePageFragment extends Fragment{
             }
             ft.addToBackStack(null);
             dialog.show(getChildFragmentManager(), "Book Details");
-            Log.i("TAG", "Just showed dialog for "+view.getTag().toString());*/
+            Log.i("TAG", "Just showed dialog for "+view.getTag().toString());
         }
     };
 }

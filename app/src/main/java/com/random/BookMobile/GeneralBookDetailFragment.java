@@ -32,6 +32,8 @@ public class GeneralBookDetailFragment extends AppCompatDialogFragment {
     TextView takersNo;
     Button lotfButton;
     View customView;
+
+    Bundle bundle;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -44,15 +46,21 @@ public class GeneralBookDetailFragment extends AppCompatDialogFragment {
 
         customView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.gen_book_details_layout, null);
+
+        bundle = this.getArguments();
+
         mainViewPager = getActivity().findViewById(R.id.main_view_pager);
         lotfButton = getActivity().findViewById(R.id.lotf);
         String buttonText = lotfButton.getText().toString();
         bookTitle = customView.findViewById(R.id.bookTitleText);
-        bookTitle.setText(buttonText);
+      //  bookTitle.setText(buttonText);
 
         bookSummary = customView.findViewById(R.id.bookSummary);
-        bookSummary.setText("The story of a few boys stranded on an island.");
-
+       // bookSummary.setText("The story of a few boys stranded on an island.");
+        if(bundle != null){
+           bookTitle.setText(bundle.getString("title"));
+           bookSummary.setText(bundle.getString("desc"));
+        }
         copiesNo = customView.findViewById(R.id.copiesNo);
         takersNo = customView.findViewById(R.id.takersNo);
 
