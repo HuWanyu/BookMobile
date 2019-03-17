@@ -22,9 +22,13 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -149,7 +153,7 @@ public class HomePageFragment extends Fragment{
                                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                                 ll.addView(myButton, lp);
                             }
-                            Toasty.success(getContext(), "Loaded Recommendations", Toast.LENGTH_LONG).show();
+                            Toasty.success(getContext(), "Loaded Recommendations", Toast.LENGTH_SHORT, true).show();
                             waitingDialog.dismiss();
 
                         } catch (Exception e) {
@@ -163,6 +167,19 @@ public class HomePageFragment extends Fragment{
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (error instanceof NetworkError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                }  else if (error instanceof NoConnectionError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof TimeoutError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getContext(), "Connection Timeout!", Toast.LENGTH_LONG).show();
+                }
 
                 error.printStackTrace();
             }

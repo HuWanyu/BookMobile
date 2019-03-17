@@ -11,14 +11,22 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
@@ -37,6 +45,7 @@ public class PreferencesActivity extends AppCompatActivity {
     String username;
     String password;
     String email;
+    String preference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +69,24 @@ public class PreferencesActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(cbFiction.isChecked())
                 {
-                    String fiction = cbFiction.getText().toString();
-                    Toasty.info(getApplicationContext(), fiction + " selected", Toast.LENGTH_SHORT).show();
+                    preference = cbFiction.getText().toString();
+
+                    Toasty.info(getApplicationContext(), preference + " selected", Toast.LENGTH_SHORT).show();
                 }
 
                 if(cbPhil.isChecked())
                 {
-                    String phil = cbPhil.getText().toString();
-                    Toasty.info(getApplicationContext(), phil+" selected", Toast.LENGTH_SHORT).show();
+                   preference= cbPhil.getText().toString();
+                    Toasty.info(getApplicationContext(), preference+" selected", Toast.LENGTH_SHORT).show();
                 }
 
                 if(cbSciFi.isChecked())
                 {
                     // testing git merge
-                    String scifi = cbSciFi.getText().toString();
-                    Toasty.info(getApplicationContext(), scifi+" selected", Toast.LENGTH_SHORT).show();
+                   preference= cbSciFi.getText().toString();
+                    Toasty.info(getApplicationContext(), preference+" selected", Toast.LENGTH_SHORT).show();
                 }
-          signUpUser();
+          createUser();
             }
         });
 
@@ -88,7 +98,7 @@ public class PreferencesActivity extends AppCompatActivity {
             }
         });
     }
-    public void signUpUser()
+    public void createUser()
     {
         mQueue = Volley.newRequestQueue(PreferencesActivity.this);
         // String url = "https://api.myjson.com/bins/1ayd4u";
@@ -102,14 +112,14 @@ public class PreferencesActivity extends AppCompatActivity {
                 .build();
         waitingDialog.show();
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
-                new Response.Listener<JSONObject>() {
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
                         try {
                             Log.d("RESPONSE!!!!", response.toString());
-                            // JSONObject validateObj = response.getJSONObject("loginValid");
-                            String user_id = response.getString("user_id");
+                            JSONObject validateObj = new JSONObject(response.toString());
+                            String user_id = validateObj.getString("user_id");
                             Log.d("REGISTRATION", "Username:" + user_id);
 
                             if (user_id.equals("bookmobileuser")) {
@@ -139,10 +149,35 @@ public class PreferencesActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                if (error instanceof NetworkError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                }  else if (error instanceof NoConnectionError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof TimeoutError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                }
                 error.printStackTrace();
             }
-        });
+        })
+
+        {
+        @Override
+        protected Map<String, String> getParams()
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put("user_id", username);
+            params.put("user_email", email);
+            params.put("password", password);
+            params.put("preference", preference);
+            return params;
+        }
+    };
         mQueue.add(request);
 
     }

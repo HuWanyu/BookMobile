@@ -17,9 +17,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -113,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         waitingDialog.show();
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -140,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (Exception e) {
 
                                 waitingDialog.dismiss();
-                                Toasty.error(LoginActivity.this, "Server Error!", Toast.LENGTH_SHORT, true).show();
+                                Toasty.error(LoginActivity.this, "Unknown Error!", Toast.LENGTH_SHORT, true).show();
 
                                 e.printStackTrace();
                             }
@@ -148,7 +154,19 @@ public class LoginActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                if (error instanceof NetworkError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                }  else if (error instanceof NoConnectionError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof TimeoutError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                }
                 error.printStackTrace();
             }
         });
