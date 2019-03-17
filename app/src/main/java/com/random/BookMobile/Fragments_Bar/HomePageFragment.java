@@ -71,7 +71,7 @@ public class HomePageFragment extends Fragment{
             }
         });
        // Code that adds buttons programmatically - will be used when generating new recommended books
-   /*     Button myButton = new Button(getContext());
+   /*   Button myButton = new Button(getContext());
         myButton.setText("Push Me");
 
         LinearLayout ll = (LinearLayout) v.findViewById(R.id.buttonLayoutRec);

@@ -99,7 +99,8 @@ public class LoginActivity extends AppCompatActivity {
     // sending to server for validation -> on response, transit to Explore Page
     public void validateUser(final String username, final String password){
         mQueue = Volley.newRequestQueue(LoginActivity.this);
-        String url = "https://api.myjson.com/bins/1ayd4u";
+       // String url = "https://api.myjson.com/bins/1ayd4u";
+        String url = "https://private-a3ace9-bookmobile2.apiary-mock.com/user/"+username;
 
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(LoginActivity.this)
@@ -113,31 +114,33 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                            try {
+                               // JSONObject validateObj = response.getJSONObject("loginValid");
+                                String user_id = response.getString("user_id");
+                                Log.d("LOGIN STATUS", "Username:" + user_id);
 
-                        try {
-                            JSONObject validateObj = response.getJSONObject("loginValid");
-                            String status = validateObj.getString("status");
-                            Log.d("LOGIN STATUS", "Login Status:"+status);
+                                if (user_id.equals("bookmobileuser")) {
+                                    waitingDialog.dismiss();
+                                    SharedPreferences.Editor editor = pref.edit();
+                                    editor.putString("username", username);
+                                    editor.putString("password", password);
+                                    editor.apply();
+                                    Toasty.success(LoginActivity.this, "Welcome back, " + username, Toast.LENGTH_SHORT, true).show();
+                                    //loginSuccessIntent.putExtra("loginUser", username);
+                                    startActivity(loginSuccessIntent);
+                                }
+                                else
+                                {
+                                    Toasty.error(LoginActivity.this,"Wrong user!", Toast.LENGTH_SHORT).show();
+                                }
 
-                            if(status.equals("okay")) {
+                            } catch (Exception e) {
+
                                 waitingDialog.dismiss();
+                                Toasty.error(LoginActivity.this, "Server Error!", Toast.LENGTH_SHORT, true).show();
 
-                                SharedPreferences.Editor editor = pref.edit();
-                                editor.putString("username",username);
-                                editor.putString("password",password);
-                                editor.apply();
-                                Toasty.success(LoginActivity.this, "Welcome back, "+username, Toast.LENGTH_SHORT, true).show();
-                                //loginSuccessIntent.putExtra("loginUser", username);
-                                startActivity(loginSuccessIntent);
+                                e.printStackTrace();
                             }
-
-                        } catch (Exception e) {
-
-                            waitingDialog.dismiss();
-                            Toasty.error(LoginActivity.this, "Server Error!", Toast.LENGTH_SHORT, true).show();
-
-                            e.printStackTrace();
-                        }
                     }
                 }, new Response.ErrorListener() {
             @Override

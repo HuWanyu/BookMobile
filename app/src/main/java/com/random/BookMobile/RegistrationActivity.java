@@ -99,7 +99,6 @@ public class RegistrationActivity extends AppCompatActivity{
     private void createNewAccount(String username, String password, String email){
             //transfer user input to preferences activity first
             Intent toPreferences = new Intent(this, PreferencesActivity.class);
-            Bundle bundle = new Bundle();
             toPreferences.putExtra("newUser", username);
             toPreferences.putExtra("Pass", password);
             toPreferences.putExtra("Email", email);
