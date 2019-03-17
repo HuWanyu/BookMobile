@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     private OnFragmentInteractionListener mListener;
     private ImageView Avatar;
 
-
     // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
@@ -74,13 +74,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
         View view = inflater.inflate(R.layout.fragment_me, container, false);
         Personal = view.findViewById(R.id.Personal);
         Personal.setOnClickListener(this);
+
+        userid = view.findViewById(R.id.UserId);
+        prf = getActivity().getSharedPreferences("user_details",Context.MODE_PRIVATE);
+        String username = prf.getString("username",null);
+        Log.v("USERNAME - PROFILE", username);
+        userid.setText(username);
+
+        userEmail = view.findViewById(R.id.UserEmail);
 
         LogOut = view.findViewById(R.id.LogOut);
         LogOut.setOnClickListener(this);
@@ -102,12 +109,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 Avatar.setImageResource(R.drawable.books4);
                 break;
         }
-
-        userid = view.findViewById(R.id.UserId);
-        userid.setText(LoginActivity.getUsername());
-        userEmail = view.findViewById(R.id.UserEmail);
-        userEmail.setText(LoginActivity.getEmail());
-
 
         return view;
     }
