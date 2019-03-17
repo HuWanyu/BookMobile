@@ -199,16 +199,14 @@ public class AddListingFragment extends Fragment {
             protected Map<String, String> getParams()
             {
                 Map<String, String> params = new HashMap<>();
-                params.put("book_title", title);
+                params.put("book_name", title);
                 params.put("book_condition", condition);
-                params.put("location", location);
-                params.put("timing", timing);
-                params.put("price", price);
+                params.put("meeting_location", location);
+                params.put("meeting_time", timing);
+                params.put("book_price_credit", price);
                 return params;
             }
-        }
-
-                ;
+        };
         mQueue.add(request);
 
     }

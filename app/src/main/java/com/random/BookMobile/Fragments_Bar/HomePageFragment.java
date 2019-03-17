@@ -35,7 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.random.BookMobile.GeneralBookDetailFragment;
 import com.random.BookMobile.LoginActivity;
 import com.random.BookMobile.R;
-import com.random.BookMobile.SesarchResultAdapter;
+import com.random.BookMobile.SearchResultAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -65,12 +65,17 @@ public class HomePageFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.home_fragment, container, false);
+
+        //To set the Welcome Text at the top, below Search Bar
         welcomeText = v.findViewById(R.id.welcomeText);
         prf = getActivity().getSharedPreferences("user_details", Context.MODE_PRIVATE);
         username = prf.getString("username",null);
         welcomeText.append(username);
+
+        //Loads recommendations by calling API
         loadRecommendations(username);
 
+        //implementation of Search View
         SearchView simpleSearchView = (SearchView) v.findViewById(R.id.searchview1);
         simpleSearchView.setQueryHint("Search for a book...");
         int bookNamesSize = getResources().getStringArray(R.array.example_Books).length;
@@ -80,7 +85,7 @@ public class HomePageFragment extends Fragment{
             bookNames.add(bookName);
         }
         ListView searchList = v.findViewById(R.id.searchList);
-        final SesarchResultAdapter arrayAdapter = new SesarchResultAdapter(getContext(),bookNames);
+        final SearchResultAdapter arrayAdapter = new SearchResultAdapter(getContext(),bookNames);
         // Set The Adapter
         searchList.setAdapter(arrayAdapter);
         // perform set on query text listener event

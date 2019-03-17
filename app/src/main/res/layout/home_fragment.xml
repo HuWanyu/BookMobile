@@ -12,7 +12,6 @@
 
     <SearchView
         android:id="@+id/searchview1"
-
         android:queryHint="Search Here"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +26,9 @@
     <ListView
         android:id="@+id/searchList"
         android:layout_width="fill_parent"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_transparent"/>
 
     <TextView
         android:id="@+id/welcomeText"

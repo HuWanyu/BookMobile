@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SesarchResultAdapter extends BaseAdapter {
+public class SearchResultAdapter extends BaseAdapter {
 
     // Declare Variables
 
@@ -20,7 +20,7 @@ public class SesarchResultAdapter extends BaseAdapter {
     private List<String> bookNameList = null;
     private ArrayList<String> searchBooksArrayList;
 
-    public SesarchResultAdapter(Context context, List<String> bookNameList) {
+    public SearchResultAdapter(Context context, List<String> bookNameList) {
         mContext = context;
         this.bookNameList = bookNameList;
         inflater = LayoutInflater.from(mContext);
