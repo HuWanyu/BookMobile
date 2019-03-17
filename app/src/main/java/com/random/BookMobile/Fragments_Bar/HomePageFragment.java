@@ -84,22 +84,26 @@ public class HomePageFragment extends Fragment{
             String bookName = getResources().getStringArray(R.array.example_Books)[i];
             bookNames.add(bookName);
         }
-        ListView searchList = v.findViewById(R.id.searchList);
+        final ListView searchList = v.findViewById(R.id.searchList);
         final SearchResultAdapter arrayAdapter = new SearchResultAdapter(getContext(),bookNames);
         // Set The Adapter
+        searchList.setVisibility(View.INVISIBLE);
         searchList.setAdapter(arrayAdapter);
+
         // perform set on query text listener event
         simpleSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-            // do something on text submit
+                searchList.setVisibility(View.VISIBLE);
+              String text = query;
+              arrayAdapter.filter(text);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                String text = newText;
-                arrayAdapter.filter(text);
+              /*  String text = newText;
+                arrayAdapter.filter(text);*/
                 return false;
             }
         });
