@@ -41,7 +41,7 @@ import dmax.dialog.SpotsDialog;
 
 public class SearchResultList extends AppCompatDialogFragment {
 
-    ListView searchbooklist;
+   /* ListView searchbooklist;
     ArrayAdapter<String> adapter;
 
     @Override
@@ -83,7 +83,7 @@ public class SearchResultList extends AppCompatDialogFragment {
             }
         });
         return true;
-    }
+    }*/
 }
 
 

@@ -11,14 +11,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.random.BookMobile.GeneralBookDetailFragment;
 import com.random.BookMobile.R;
+import com.random.BookMobile.SesarchResultAdapter;
+
+import java.util.ArrayList;
 
 public class HomePageFragment extends Fragment{
     private static final String TAG = "Home Page";
@@ -26,6 +32,7 @@ public class HomePageFragment extends Fragment{
     String username;
     TextView welcomeText;
     SharedPreferences prf;
+    ArrayList<String> bookNames = new ArrayList<String>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,7 +43,33 @@ public class HomePageFragment extends Fragment{
         username = prf.getString("username",null);
         welcomeText.append(username);
 
+        SearchView simpleSearchView = (SearchView) v.findViewById(R.id.searchview1);
+        simpleSearchView.setQueryHint("Search for a book...");
+        int bookNamesSize = getResources().getStringArray(R.array.example_Books).length;
+        for(int i=0; i<bookNamesSize; i++)
+        {
+            String bookName = getResources().getStringArray(R.array.example_Books)[i];
+            bookNames.add(bookName);
+        }
+        ListView searchList = v.findViewById(R.id.searchList);
+        final SesarchResultAdapter arrayAdapter = new SesarchResultAdapter(getContext(),bookNames);
+        // Set The Adapter
+        searchList.setAdapter(arrayAdapter);
+        // perform set on query text listener event
+        simpleSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+            // do something on text submit
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String text = newText;
+                arrayAdapter.filter(text);
+                return false;
+            }
+        });
        // Code that adds buttons programmatically - will be used when generating new recommended books
    /*     Button myButton = new Button(getContext());
         myButton.setText("Push Me");
