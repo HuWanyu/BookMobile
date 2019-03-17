@@ -29,4 +29,11 @@
         <item>Old</item>
     </string-array>
 
+    <string-array name = "example_Books">
+        <item> Harry Potter </item>
+        <item> Game of Thrones </item>
+        <item> Cooking Recipes </item>
+
+    </string-array>
+
 </resources>
