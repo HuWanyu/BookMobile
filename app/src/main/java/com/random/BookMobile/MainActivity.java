@@ -1,6 +1,7 @@
 package com.random.BookMobile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -25,10 +26,16 @@ public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
     public static ViewPager mainViewPager;
     private BottomNavigationView mainNav;
+    SharedPreferences prf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent logoutIntent = new Intent(MainActivity.this, LoginActivity.class);
+        prf = getSharedPreferences("user_details", MODE_PRIVATE);
+        if(!prf.contains("username") && !prf.contains("password")) {
+            startActivity(logoutIntent);
+        }
         mainViewPager = findViewById(R.id.main_view_pager);
         final MainPageAdapter mainPageAdapter = new MainPageAdapter(getSupportFragmentManager());
         mainViewPager.setAdapter(mainPageAdapter);

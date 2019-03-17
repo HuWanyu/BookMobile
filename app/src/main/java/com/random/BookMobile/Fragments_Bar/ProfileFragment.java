@@ -1,5 +1,7 @@
 package com.random.BookMobile.Fragments_Bar;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,6 +40,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    SharedPreferences prf;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -155,6 +159,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 break;
 
             case R.id.LogOut:
+                prf = getActivity().getSharedPreferences("user_details", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prf.edit();
+                editor.clear();
+                editor.apply();
                 Intent startNewActivity4 = new Intent(getContext(),LoginActivity.class);
                 startActivity(startNewActivity4);
                 break;

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
@@ -46,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public String username;
     public String password;
+    SharedPreferences pref;
+    Intent loginSuccessIntent;
     private RequestQueue mQueue;
 
     private static String mCurrentUsername;
@@ -69,6 +72,11 @@ public class LoginActivity extends AppCompatActivity {
         mUsername = findViewById(R.id.usernameLogin);
         mPassword = findViewById(R.id.passwordLogin);
 
+        loginSuccessIntent = new Intent(LoginActivity.this, MainActivity.class);
+        pref = getSharedPreferences("user_details",MODE_PRIVATE);
+        if(pref.contains("username") && pref.contains("password")) {
+            startActivity(loginSuccessIntent);
+        }
 
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // sending to server for validation -> on response, transit to Explore Page
-    public void validateUser(final String username, String password){
+    public void validateUser(final String username, final String password){
         mQueue = Volley.newRequestQueue(LoginActivity.this);
         String url = "https://api.myjson.com/bins/1ayd4u";
 
@@ -113,9 +121,13 @@ public class LoginActivity extends AppCompatActivity {
 
                             if(status.equals("okay")) {
                                 waitingDialog.dismiss();
+
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("username",username);
+                                editor.putString("password",password);
+                                editor.apply();
                                 Toasty.success(LoginActivity.this, "Welcome back, "+username, Toast.LENGTH_SHORT, true).show();
-                                Intent loginSuccessIntent = new Intent(LoginActivity.this, MainActivity.class);
-                                loginSuccessIntent.putExtra("loginUser", username);
+                                //loginSuccessIntent.putExtra("loginUser", username);
                                 startActivity(loginSuccessIntent);
                             }
 
