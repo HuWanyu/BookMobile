@@ -101,6 +101,9 @@ public class LoginActivity extends AppCompatActivity {
                     validateUser(username, password);
                 else
                     Toasty.error(getApplicationContext(), "Please fill in both fields!", Toast.LENGTH_SHORT).show();
+
+                mUsername.setText("");
+                mPassword.setText("");
             }
         });
     }
@@ -136,7 +139,9 @@ public class LoginActivity extends AppCompatActivity {
                                     editor.apply();
                                     Toasty.success(LoginActivity.this, "Welcome back, " + username, Toast.LENGTH_SHORT, true).show();
                                     //loginSuccessIntent.putExtra("loginUser", username);
+
                                     startActivity(loginSuccessIntent);
+                                    finish();
                                 }
                                 else
                                 {

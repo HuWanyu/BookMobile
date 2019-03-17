@@ -56,6 +56,10 @@ public class RegistrationActivity extends AppCompatActivity{
                 else
                     createNewAccount(username, password,email);
 
+                mUsername.setText("");
+                mPassword.setText("");
+                mEmail.setText("");
+
               /*  if(!username.equals("") && !password.equals("") && !email.equals(""))
                     createNewAccount(username, password, email);
                 else

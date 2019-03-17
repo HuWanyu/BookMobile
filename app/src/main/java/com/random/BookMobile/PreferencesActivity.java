@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -100,8 +101,9 @@ public class PreferencesActivity extends AppCompatActivity {
     public void createUser()
     {
         mQueue = Volley.newRequestQueue(PreferencesActivity.this);
-        // String url = "https://api.myjson.com/bins/1ayd4u";
-        String url = "https://private-a3ace9-bookmobile2.apiary-mock.com/user/"+username;
+        // backup url
+        //String url = "https://private-a3ace9-bookmobile2.apiary-mock.com/user/"+username;
+       String url = "https://wordcount-stageee.herokuapp.com/user";
 
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(PreferencesActivity.this)
@@ -131,6 +133,7 @@ public class PreferencesActivity extends AppCompatActivity {
                                 Toasty.success(PreferencesActivity.this, "Welcome, " + username, Toast.LENGTH_SHORT, true).show();
                                 //loginSuccessIntent.putExtra("loginUser", username);
                                 startActivity(regSuccessIntent);
+                                finish();
                             }
                             else
                             {
@@ -167,12 +170,13 @@ public class PreferencesActivity extends AppCompatActivity {
 
         {
         @Override
-        protected Map<String, String> getParams()
+        protected Map<String, String> getParams() throws AuthFailureError
         {
             Map<String, String> params = new HashMap<>();
             params.put("user_id", username);
             params.put("user_email", email);
             params.put("password", password);
+            params.put("credits", "100");
             params.put("preference", preference);
             return params;
         }

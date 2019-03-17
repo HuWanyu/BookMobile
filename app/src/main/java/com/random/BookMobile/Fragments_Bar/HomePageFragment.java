@@ -142,7 +142,7 @@ public class HomePageFragment extends Fragment{
     public void loadRecommendations(String username)
     {
         mQueue = Volley.newRequestQueue(getActivity());
-        String url = "https://api.myjson.com/bins/sxtwu";
+        String url = "https://api.myjson.com/bins/f6xjy";
 
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(getActivity())
