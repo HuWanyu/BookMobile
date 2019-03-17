@@ -16,6 +16,7 @@ public class DetailPage extends AppCompatActivity {
     private int bookID;
     private int userID;
 
+    private TextView giverNameText;
     private TextView bookName;
     private TextView bookDescription;
     private ImageView image;
@@ -35,9 +36,12 @@ public class DetailPage extends AppCompatActivity {
         setContentView(R.layout.activity_event_detail);
 
         Intent intent = getIntent();
+        String giverName = intent.getStringExtra("Giver Name");
+        giverNameText = findViewById(R.id.giver_name);
+        giverNameText.setText(giverName);
 
-        bookID = Integer.parseInt(intent.getStringExtra("BookID"));
-        userID = LoginActivity.getUserID();
+       // bookID = Integer.parseInt(intent.getStringExtra("BookID"));
+       // userID = LoginActivity.getUserID();
 
 //uncomment this part after database has set up
 

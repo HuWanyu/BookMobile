@@ -50,6 +50,10 @@ public class HomePageFragment extends Fragment{
     SharedPreferences prf;
     private RequestQueue mQueue;
     ArrayList<String> bookNames = new ArrayList<String>();
+
+    JSONArray localBookArray;
+
+    String bookTitle, description;
     View v;
 
     @Override
@@ -62,6 +66,7 @@ public class HomePageFragment extends Fragment{
         username = prf.getString("username",null);
         welcomeText.append(username);
         loadRecommendations(username);
+
         SearchView simpleSearchView = (SearchView) v.findViewById(R.id.searchview1);
         simpleSearchView.setQueryHint("Search for a book...");
         int bookNamesSize = getResources().getStringArray(R.array.example_Books).length;
@@ -112,7 +117,6 @@ public class HomePageFragment extends Fragment{
     public void loadRecommendations(String username)
     {
         mQueue = Volley.newRequestQueue(getActivity());
-        // String url = "https://api.myjson.com/bins/1ayd4u";
         String url = "https://api.myjson.com/bins/mubwm";
 
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
@@ -128,15 +132,18 @@ public class HomePageFragment extends Fragment{
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-
                             JSONArray bookArray = response.getJSONArray("Books");
+                            localBookArray = bookArray;
                             for(int i=0; i<bookArray.length();i++)
                             {
                                 // Code that adds buttons programmatically - will be used when generating new recommended books
                                 JSONObject book = bookArray.getJSONObject(i);
-                                String title = book.getString("title");
+                                bookTitle = book.getString("title");
+                                description = book.getString("desc");
                                 Button myButton = new Button(getContext());
-                                myButton.setText(title);
+                                myButton.setText(bookTitle);
+                                myButton.setTag(bookTitle);
+                                myButton.setOnClickListener(btnclick);
 
                                 LinearLayout ll = (LinearLayout) v.findViewById(R.id.buttonLayoutRec);
                                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -161,6 +168,30 @@ public class HomePageFragment extends Fragment{
             }
         });
         mQueue.add(request);
-
     }
+
+    View.OnClickListener btnclick = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+            String bookTitle = view.getTag().toString();
+            Toasty.success(getContext(), bookTitle, Toast.LENGTH_SHORT ).show();
+
+           /* SharedPreferences.Editor editor = prf.edit();
+            editor.putString("title", bookTitle);
+            editor.putString("description", description);
+            editor.apply();*/
+
+
+            /*GeneralBookDetailFragment dialog = new GeneralBookDetailFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("Book Details");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+            dialog.show(getChildFragmentManager(), "Book Details");
+            Log.i("TAG", "Just showed dialog for "+view.getTag().toString());*/
+        }
+    };
 }

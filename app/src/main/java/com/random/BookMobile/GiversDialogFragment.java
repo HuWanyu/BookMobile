@@ -3,6 +3,7 @@ package com.random.BookMobile;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import dmax.dialog.SpotsDialog;
+import es.dmoral.toasty.Toasty;
 
 public class GiversDialogFragment extends AppCompatDialogFragment {
     View customView;
@@ -75,22 +77,22 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
     }
 
     private void getData() {
-        String url = "https://api.myjson.com/bins/ig2di";
+        String url = "https://api.myjson.com/bins/dfojq";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
 
-                            JSONArray jsonArray = response.getJSONArray("employees");
+                            JSONArray jsonArray = response.getJSONArray("Givers");
 
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject employee = jsonArray.getJSONObject(i);
 
-                                String giverName = employee.getString("name");
-                                String bookCondition = employee.getString("email");
+                                String giverName = employee.getString("title");
+                                String bookCondition = employee.getString("condition");
                                 String timing = employee.getString("timings");
-                                int cost = employee.getInt("age");
+                                int cost = employee.getInt("price");
 
                                 giversNames.add(giverName);
                                 bookCond.add(bookCondition);
@@ -119,25 +121,32 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
         MyListAdapter adapter=new MyListAdapter(getActivity(), giversNames, bookCond,timings,costs);
         list=customView.findViewById(R.id.my_list);
         list.setAdapter(adapter);
-
+        final Intent individualBook = new Intent(getActivity(), DetailPage.class);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
                 // TODO Auto-generated method stub
                 if(position == 0) {
+                    individualBook.putExtra("Giver Name", giversNames.get(0));
                     //code specific to first list item
-                    Toast.makeText(getContext(),"Giver selected:"+giversNames.get(0),Toast.LENGTH_SHORT).show();
+                    Toasty.info(getContext(),"Giver selected:"+giversNames.get(0),Toast.LENGTH_SHORT).show();
+                    startActivity(individualBook);
+
                 }
 
                 else if(position == 1) {
+                    individualBook.putExtra("Giver Name", giversNames.get(1));
                     //code specific to 2nd list item
-                    Toast.makeText(getContext(),"Giver selected:"+giversNames.get(1),Toast.LENGTH_SHORT).show();
+                    Toasty.info(getContext(),"Giver selected:"+giversNames.get(1),Toast.LENGTH_SHORT).show();
+                    startActivity(individualBook);
                 }
 
                 else if(position == 2) {
-
-                    Toast.makeText(getContext(),"Giver selected:"+giversNames.get(2),Toast.LENGTH_SHORT).show();
+                    individualBook.putExtra("Giver Name", giversNames.get(2));
+                    //code specific to 2nd list item
+                    Toasty.info(getContext(),"Giver selected:"+giversNames.get(2),Toast.LENGTH_SHORT).show();
+                    startActivity(individualBook);
                 }
 
             }

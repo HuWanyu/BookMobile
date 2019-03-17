@@ -13,14 +13,14 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="252dp"
+        android:layout_marginBottom="200dp"
+        android:layout_marginTop="25dp"
         android:text="Book Description"
         app:layout_constraintBottom_toTopOf="@+id/detailpage_chat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintTop_toBottomOf="@+id/detailpage_name" />
 
     <TextView
         android:id="@+id/detailpage_name"
@@ -29,7 +29,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="348dp"
         android:layout_marginEnd="8dp"
         android:text="Book Name"
         android:textColor="@android:color/darker_gray"
@@ -38,7 +37,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/giver_name"/>
+
+    <TextView
+        android:id="@+id/giver_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Giver Name"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detailpage_imageBook"
+        app:layout_constraintBottom_toTopOf="@id/detailpage_name"/>
 
     <ImageView
         android:id="@+id/detailpage_imageBook"
@@ -50,7 +65,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="56dp"
-        app:layout_constraintBottom_toTopOf="@+id/detailpage_description"
+        app:layout_constraintBottom_toTopOf="@id/giver_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
