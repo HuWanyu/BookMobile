@@ -50,7 +50,10 @@ public class RegistrationActivity extends AppCompatActivity{
                 String username = mUsername.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 String email = mEmail.getText().toString().trim();
-                createNewAccount(username, password, email);
+                if(!username.equals("") && !password.equals("") && !email.equals(""))
+                    createNewAccount(username, password, email);
+                else
+                    Toasty.error(getApplicationContext(), "Please fill in all fields!", Toast.LENGTH_SHORT).show();
 
             }
         });

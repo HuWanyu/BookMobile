@@ -91,7 +91,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 username = mUsername.getText().toString().trim();
                 password = mPassword.getText().toString().trim();
-                validateUser(username, password);
+                if(!username.equals("") && !password.equals(""))
+                    validateUser(username, password);
+                else
+                    Toasty.error(getApplicationContext(), "Please fill in both fields!", Toast.LENGTH_SHORT).show();
             }
         });
     }
