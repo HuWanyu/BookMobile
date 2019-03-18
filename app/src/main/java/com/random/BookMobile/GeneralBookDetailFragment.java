@@ -74,6 +74,7 @@ public class GeneralBookDetailFragment extends AppCompatDialogFragment {
                     case DialogInterface.BUTTON_POSITIVE:
                         dismiss();
                         GiversDialogFragment giverList = new GiversDialogFragment();
+                        giverList.setArguments(bundle);
                         FragmentTransaction ft = getParentFragment().getFragmentManager().beginTransaction();
                         if(giverList.getView() !=null)
                             ft.replace(R.id.main_view_pager, giverList);

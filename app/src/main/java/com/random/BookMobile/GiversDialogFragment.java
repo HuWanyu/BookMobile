@@ -42,7 +42,7 @@ import es.dmoral.toasty.Toasty;
 public class GiversDialogFragment extends AppCompatDialogFragment {
     View customView;
     private RequestQueue mQueue;
-
+    Bundle bundle;
     ListView list;
     ProgressBar progressBar;
     ArrayList<String> giversNames = new ArrayList<>();
@@ -67,6 +67,7 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
         progressBar = customView.findViewById(R.id.progressBar);
         //get data from server
         getData();
+        bundle = this.getArguments();
         Log.d("givers names", "giver names"+giversNames.toString());
         //custom Dialog Title
         TextView customText = new TextView(getContext());
@@ -139,6 +140,7 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
         list=customView.findViewById(R.id.my_list);
         list.setAdapter(adapter);
         final Intent individualBook = new Intent(getActivity(), DetailPage.class);
+        individualBook.putExtras(bundle);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override

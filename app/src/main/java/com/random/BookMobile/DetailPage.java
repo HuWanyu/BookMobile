@@ -37,8 +37,14 @@ public class DetailPage extends AppCompatActivity {
 
         Intent intent = getIntent();
         String giverName = intent.getStringExtra("Giver Name");
+        String title = intent.getExtras().getString("title");
+        String summary = intent.getExtras().getString("desc");
         giverNameText = findViewById(R.id.giver_name);
+        bookName = findViewById(R.id.detailpage_name);
+        bookDescription = findViewById(R.id.detailpage_description);
         giverNameText.setText(giverName);
+        bookName.setText(title);
+        bookDescription.setText(summary);
 
        // bookID = Integer.parseInt(intent.getStringExtra("BookID"));
        // userID = LoginActivity.getUserID();
