@@ -112,8 +112,8 @@ public class LoginActivity extends AppCompatActivity {
     public void validateUser(final String username, final String password){
         mQueue = Volley.newRequestQueue(LoginActivity.this);
        // String url = "https://api.myjson.com/bins/1ayd4u";
-        String url = "https://private-a3ace9-bookmobile2.apiary-mock.com/user/"+username;
-
+        //String url = "https://private-a3ace9-bookmobile2.apiary-mock.com/user/"+username;
+        String url = "https://api.myjson.com/bins/13jrwu";
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(LoginActivity.this)
                 .setMessage("Validating User...")
@@ -122,13 +122,18 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         waitingDialog.show();
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                             try {
+                                Log.d("RESPONSE", response.toString());
                                // JSONObject validateObj = response.getJSONObject("loginValid");
                                 String user_id = response.getString("user_id");
+                               String user_email = response.getString("user_email");
+                               String user_credits = response.getString("credits");
+                              // JSONArray listedBooks = response.getJSONArray("books_listed");
+
                                 Log.d("LOGIN STATUS", "Username:" + user_id);
 
                                 if (user_id.equals("bookmobileuser")) {
@@ -136,6 +141,9 @@ public class LoginActivity extends AppCompatActivity {
                                     SharedPreferences.Editor editor = pref.edit();
                                     editor.putString("username", username);
                                     editor.putString("password", password);
+                                    editor.putString("email", user_email);
+                                    editor.putString("credits", user_credits);
+                                   // editor.putString("listed books", listedBooks.toString());
                                     editor.apply();
                                     Toasty.success(LoginActivity.this, "Welcome back, " + username, Toast.LENGTH_SHORT, true).show();
                                     //loginSuccessIntent.putExtra("loginUser", username);

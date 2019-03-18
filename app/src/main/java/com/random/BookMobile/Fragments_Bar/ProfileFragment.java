@@ -53,6 +53,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     public Button LogOut;
     private TextView userid;
     private TextView userEmail;
+    private TextView userCredits;
     private OnFragmentInteractionListener mListener;
     private ImageView Avatar;
 
@@ -82,12 +83,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         Personal.setOnClickListener(this);
 
         userid = view.findViewById(R.id.UserId);
+        userEmail = view.findViewById(R.id.UserEmail);
+        userCredits = view.findViewById(R.id.UserCredits);
         prf = getActivity().getSharedPreferences("user_details",Context.MODE_PRIVATE);
+        String email = prf.getString("email",null);
+        String credits = prf.getString("credits", null);
         String username = prf.getString("username",null);
         Log.v("USERNAME - PROFILE", username);
         userid.setText(username);
-
-        userEmail = view.findViewById(R.id.UserEmail);
+        userEmail.setText(email);
+        userCredits.append(" "+credits);
 
         LogOut = view.findViewById(R.id.LogOut);
         LogOut.setOnClickListener(this);
