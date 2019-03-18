@@ -103,8 +103,8 @@ public class PreferencesActivity extends AppCompatActivity {
         mQueue = Volley.newRequestQueue(PreferencesActivity.this);
         // backup url
         //String url = "https://private-a3ace9-bookmobile2.apiary-mock.com/user/"+username;
-       String url = "https://wordcount-stageee.herokuapp.com/user";
-
+       //String url = "https://wordcount-stageee.herokuapp.com/user";
+        String url = "https://api.myjson.com/bins/13jrwu";
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(PreferencesActivity.this)
                 .setMessage("Creating User...")
@@ -112,8 +112,68 @@ public class PreferencesActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .build();
         waitingDialog.show();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d("RESPONSE", response.toString());
+                            // JSONObject validateObj = response.getJSONObject("loginValid");
+                            String user_id = response.getString("user_id");
+                            String user_email = response.getString("user_email");
+                            String user_credits = response.getString("credits");
+                            // JSONArray listedBooks = response.getJSONArray("books_listed");
 
-        StringRequest request = new StringRequest(Request.Method.POST, url,
+                            Log.d("LOGIN STATUS", "Username:" + user_id);
+
+                            if (user_id.equals("bookmobileuser")) {
+                                waitingDialog.dismiss();
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("username", username);
+                                editor.putString("password", password);
+                                editor.putString("email", user_email);
+                                editor.putString("credits", user_credits);
+                                // editor.putString("listed books", listedBooks.toString());
+                                editor.apply();
+                                Toasty.success(PreferencesActivity.this, "Welcome, " + username, Toast.LENGTH_SHORT, true).show();
+                                Intent regSuccessIntent = new Intent(PreferencesActivity.this, MainActivity.class);
+
+                                startActivity(regSuccessIntent);
+                                finish();
+                            }
+                            else
+                            {
+                                Toasty.error(PreferencesActivity.this,"Error!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+
+                            waitingDialog.dismiss();
+                            Toasty.error(PreferencesActivity.this, "Unknown Error!", Toast.LENGTH_SHORT, true).show();
+
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error instanceof NetworkError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                }  else if (error instanceof NoConnectionError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof TimeoutError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getApplicationContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                }
+                error.printStackTrace();
+            }
+        });
+        /*StringRequest request = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -180,7 +240,7 @@ public class PreferencesActivity extends AppCompatActivity {
             params.put("preference", preference);
             return params;
         }
-    };
+    };*/
         mQueue.add(request);
 
     }
