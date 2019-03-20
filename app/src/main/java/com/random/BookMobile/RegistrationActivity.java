@@ -71,7 +71,9 @@ public class RegistrationActivity extends AppCompatActivity{
         mCancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                Intent goBackToLogin = new Intent(RegistrationActivity.this, LoginActivity.class);
+                startActivity(goBackToLogin);
+                RegistrationActivity.this.finish();
             }
         });
     }

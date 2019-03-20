@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,6 +75,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        final TextInputLayout usernameWrapper = findViewById(R.id.usernameLogin);
+        final TextInputLayout passwordWrapper = findViewById(R.id.passwordLogin);
+
         mRegisterBtn = findViewById(R.id.registerButton);
         mLoginBtn = findViewById(R.id.loginButton);
         mUsername = findViewById(R.id.usernameInput);
@@ -90,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent jumpRegisterIntent = new Intent(getBaseContext(), RegistrationActivity.class);
                 startActivity(jumpRegisterIntent);
+                LoginActivity.this.finish();
             }
         });
 
@@ -100,9 +105,11 @@ public class LoginActivity extends AppCompatActivity {
                 password = mPassword.getText().toString().trim();
                 if(!username.equals("") && !password.equals(""))
                     validateUser(username, password);
-                else
-                    Toasty.error(getApplicationContext(), "Please fill in both fields!", Toast.LENGTH_SHORT).show();
-
+                else {
+                    usernameWrapper.setError("This is a required field.");
+                    passwordWrapper.setError("This is a required field");
+                    //Toasty.error(getApplicationContext(), "Please fill in both fields!", Toast.LENGTH_SHORT).show();
+                }
                 mUsername.setText("");
                 mPassword.setText("");
             }
@@ -154,7 +161,8 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                                 else
                                 {
-                                    Toasty.error(LoginActivity.this,"Wrong user!", Toast.LENGTH_SHORT).show();
+
+                                   // Toasty.error(LoginActivity.this,"Wrong user!", Toast.LENGTH_SHORT).show();
                                 }
 
                             } catch (Exception e) {

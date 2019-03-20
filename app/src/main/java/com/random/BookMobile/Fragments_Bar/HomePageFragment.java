@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,12 +70,8 @@ public class HomePageFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.home_fragment, container, false);
-
-        //To set the Welcome Text at the top, below Search Bar
-        welcomeText = v.findViewById(R.id.welcomeText);
         prf = getActivity().getSharedPreferences("user_details", Context.MODE_PRIVATE);
         username = prf.getString("username",null);
-        welcomeText.append(username);
         bundle = new Bundle();
         //Loads recommendations by calling API
         loadRecommendations(username);
@@ -151,10 +149,11 @@ public class HomePageFragment extends Fragment{
                                 bookTitle = book.getString("title");
                                 description = book.getString("desc");
                                 // Put anything what you want
-                                Button myButton = new Button(getContext());
+                                MaterialButton myButton = new MaterialButton(getContext());
                                 myButton.setText(bookTitle);
                                 myButton.setTag(bookTitle);
                                 myButton.setOnClickListener(btnclick);
+                                //CardView cardView = v.findViewById(R.id.categories_card_view);
 
                                 LinearLayout ll = (LinearLayout) v.findViewById(R.id.buttonLayoutRec);
                                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);

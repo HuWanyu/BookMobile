@@ -22,8 +22,21 @@
     <string name="hint_pass">Password</string>
     <string name="hint_email">E-mail</string>
 
+    <string name="hint_new_email">New E-mail</string>
+    <string name="hint_new_pass">New Password</string>
+
+    <string name="my_books">My Listed Books</string>
+    <string name="change_particulars">Update User Details</string>
+    <string name="change_avatar_text">Change Avatar</string>
+    <string name="confirm_change_text">Save Changes</string>
+
+    <string name="credit_label">Credits:</string>
+    <string name="email_label">email_here</string>
+
     <string name="cancel_button_text">Cancel</string>
     <string name="reg_submit_button_text">Submit</string>
+
+    <string name="logout_text">Logout</string>
 
     <string-array name="ampmarray">
         <item>AM</item>
