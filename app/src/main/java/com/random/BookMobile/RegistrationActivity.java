@@ -37,9 +37,9 @@ public class RegistrationActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        mUsername = findViewById(R.id.usernameRegi);
-        mPassword = findViewById(R.id.passwordRegi);
-        mEmail = findViewById(R.id.EmailRegi);
+        mUsername = findViewById(R.id.usernameRegInput);
+        mPassword = findViewById(R.id.passwordRegInput);
+        mEmail = findViewById(R.id.emailRegInput);
 
         mRegiterSubmitBtn = findViewById(R.id.registerButton);
         mCancelBtn = findViewById(R.id.cancelButton);

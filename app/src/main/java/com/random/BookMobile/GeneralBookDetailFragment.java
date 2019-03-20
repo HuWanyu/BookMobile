@@ -80,8 +80,6 @@ public class GeneralBookDetailFragment extends AppCompatDialogFragment {
                             ft.replace(R.id.main_view_pager, giverList);
                         ft.addToBackStack(null);
                         giverList.show(getParentFragment().getFragmentManager(), "Giver List");
-
-
                         /*takerCount++;
                         Toast.makeText(getContext(), "Number of Takers increased to "+takerCount, Toast.LENGTH_SHORT).show();*/
                         break;

@@ -121,21 +121,6 @@ public class HomePageFragment extends Fragment{
         });
 
 
-    /*    lotfButton = v.findViewById(R.id.lotf);
-        lotfButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GeneralBookDetailFragment dialog = new GeneralBookDetailFragment();
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("Book Details");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-                dialog.show(getChildFragmentManager(), "Book Details");
-                Log.i("TAG", "Just showed dialog");
-            }
-        });*/
         return v;
     }
 

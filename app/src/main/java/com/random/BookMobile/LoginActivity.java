@@ -1,5 +1,6 @@
 package com.random.BookMobile;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -75,8 +76,8 @@ public class LoginActivity extends AppCompatActivity {
 
         mRegisterBtn = findViewById(R.id.registerButton);
         mLoginBtn = findViewById(R.id.loginButton);
-        mUsername = findViewById(R.id.usernameLogin);
-        mPassword = findViewById(R.id.passwordLogin);
+        mUsername = findViewById(R.id.usernameInput);
+        mPassword = findViewById(R.id.passwordInput);
 
         loginSuccessIntent = new Intent(LoginActivity.this, MainActivity.class);
         pref = getSharedPreferences("user_details",MODE_PRIVATE);
