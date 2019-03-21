@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +49,7 @@ import es.dmoral.toasty.Toasty;
 
 public class AddListingFragment extends Fragment {
     int REQUEST_CODE = 0;
-    Button addListingButton, dateButton;
+    MaterialButton addListingButton, dateButton;
     String title, condition, location, timing, price;
     private RequestQueue mQueue;
     @Override

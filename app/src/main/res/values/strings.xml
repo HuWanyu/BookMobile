@@ -25,6 +25,16 @@
     <string name="hint_new_email">New E-mail</string>
     <string name="hint_new_pass">New Password</string>
 
+    <string name="hint_book_title">Book Title</string>
+    <string name="hint_cond">Condition</string>
+    <string name="hint_location">Preferred Meeting Location</string>
+    <string name="hint_price">Price</string>
+    <string name="preferred_string">Preferred</string>
+    <string name="timing_string">Timing</string>
+    <string name="set_date_text">Set Date</string>
+    <string name="upload_pic_text">Upload Picture</string>
+    <string name="add_listing_text">Add Listing</string>
+
     <string name="my_books">My Listed Books</string>
     <string name="change_particulars">Update User Details</string>
     <string name="change_avatar_text">Change Avatar</string>
