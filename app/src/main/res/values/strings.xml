@@ -46,6 +46,9 @@
     <string name="cancel_button_text">Cancel</string>
     <string name="reg_submit_button_text">Submit</string>
 
+    <string name="categories_text">Categories</string>
+    <string name="rec_text">Recommendations</string>
+
     <string name="logout_text">Logout</string>
 
     <string-array name="ampmarray">

@@ -3,6 +3,10 @@ package com.random.BookMobile.Fragments_Bar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
@@ -10,7 +14,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +65,11 @@ public class HomePageFragment extends Fragment{
     private RequestQueue mQueue;
     ArrayList<String> bookNames = new ArrayList<String>();
 
+    CardView catCardView;
+    LinearLayout.LayoutParams layoutparamsWPWP, layoutparamsWPMP, layoutparamsMPWP, layoutparamsMPMP;
+    LinearLayout categoryCards;
+    LinearLayout recoCards;
+
     Bundle bundle;
 
     JSONArray localBookArray;
@@ -73,6 +85,10 @@ public class HomePageFragment extends Fragment{
         prf = getActivity().getSharedPreferences("user_details", Context.MODE_PRIVATE);
         username = prf.getString("username",null);
         bundle = new Bundle();
+
+        categoryCards = v.findViewById(R.id.category_cards);
+        recoCards = v.findViewById(R.id.recommendation_cards);
+
         //Loads recommendations by calling API
         loadRecommendations(username);
 
@@ -118,8 +134,133 @@ public class HomePageFragment extends Fragment{
             }
         });
 
+        //display categories
+        createNewCategoryCard("Philosophy", R.mipmap.yin_yang);
+        createNewCategoryCard("Sci-Fi", R.mipmap.cyborg);
+        createNewCategoryCard("Fantasy", R.mipmap.frog_prince);
+        createNewCategoryCard("History", R.mipmap.hourglass);
 
         return v;
+    }
+
+    public void createNewCategoryCard(String title, int id){
+
+        catCardView = new CardView(getContext());
+        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
+        layoutparamsWPWP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        layoutparamsWPMP = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+
+        layoutparamsMPWP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutparamsMPMP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        LinearLayout container = new LinearLayout(getContext());
+        container.setLayoutParams(layoutparamsWPWP);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setPadding(padding, 0,0,0);
+
+        catCardView.setPreventCornerOverlap(false);
+        catCardView.setLayoutParams(layoutparamsWPWP);
+        catCardView.setRadius(50);
+        catCardView.setCardBackgroundColor(Color.rgb(220, 220, 220));
+        catCardView.setCardElevation(40);
+
+        ViewGroup.MarginLayoutParams cardViewMarginParams = (ViewGroup.MarginLayoutParams) catCardView.getLayoutParams();
+        cardViewMarginParams.setMargins(0, 0, padding, 0);
+        catCardView.requestLayout();  //Dont forget this line
+
+        ImageView imageView = new ImageView(getContext());
+        imageView.setImageResource(id);
+        imageView.setLayoutParams(layoutparamsWPWP);
+        imageView.setAdjustViewBounds(true);
+        imageView.setPadding(padding, padding,0,padding);
+
+        TextView textview = new TextView(getContext());
+        textview.setLayoutParams(layoutparamsMPWP);
+        textview.setText(title);
+        textview.setGravity(Gravity.CENTER_HORIZONTAL);
+        textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
+        textview.setTextColor(Color.rgb(0,0,0));
+
+        container.addView(textview);
+        container.addView(imageView);
+
+        catCardView.addView(container);
+
+        categoryCards.addView(catCardView);
+
+    }
+
+    public void createNewRecoCard(String title){
+
+        catCardView = new CardView(getContext());
+        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
+        layoutparamsWPWP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        layoutparamsWPMP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+
+        layoutparamsMPWP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutparamsMPMP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        LinearLayout container = new LinearLayout(getContext());
+        container.setLayoutParams(layoutparamsWPWP);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setPadding(padding, 0,0,0);
+
+        catCardView.setPreventCornerOverlap(false);
+        catCardView.setLayoutParams(layoutparamsWPWP);
+        catCardView.setRadius(50);
+        catCardView.setCardBackgroundColor(Color.rgb(220, 220, 220));
+        catCardView.setCardElevation(40);
+
+        ViewGroup.MarginLayoutParams cardViewMarginParams = (ViewGroup.MarginLayoutParams) catCardView.getLayoutParams();
+        cardViewMarginParams.setMargins(0, 0, padding, 0);
+        catCardView.requestLayout();  //Dont forget this line
+
+        ImageView imageView = new ImageView(getContext());
+        imageView.setImageResource(R.mipmap.closed_book);
+        imageView.setLayoutParams(layoutparamsWPWP);
+        imageView.setAdjustViewBounds(true);
+        imageView.setPadding(padding, padding,0,padding);
+
+        TextView textview = new TextView(getContext());
+        textview.setLayoutParams(layoutparamsMPWP);
+        textview.setText(title);
+        textview.setGravity(Gravity.CENTER_HORIZONTAL);
+        textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
+        textview.setTextColor(Color.rgb(0,0,0));
+
+        container.addView(textview);
+        container.addView(imageView);
+
+        catCardView.addView(container);
+        catCardView.setTag(title);
+        catCardView.setOnClickListener(btnclick);
+
+        recoCards.addView(catCardView);
+
     }
 
     public void loadRecommendations(String username)
@@ -149,15 +290,16 @@ public class HomePageFragment extends Fragment{
                                 bookTitle = book.getString("title");
                                 description = book.getString("desc");
                                 // Put anything what you want
-                                MaterialButton myButton = new MaterialButton(getContext());
+                               /* MaterialButton myButton = new MaterialButton(getContext());
                                 myButton.setText(bookTitle);
                                 myButton.setTag(bookTitle);
-                                myButton.setOnClickListener(btnclick);
+                                myButton.setOnClickListener(btnclick);*/
+                                createNewRecoCard(bookTitle);
                                 //CardView cardView = v.findViewById(R.id.categories_card_view);
 
-                                LinearLayout ll = (LinearLayout) v.findViewById(R.id.buttonLayoutRec);
+                              /*  LinearLayout ll = (LinearLayout) v.findViewById(R.id.buttonLayoutRec);
                                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                                ll.addView(myButton, lp);
+                                ll.addView(myButton, lp);*/
                             }
                             Toasty.success(getContext(), "Loaded Recommendations", Toast.LENGTH_SHORT, true).show();
                             waitingDialog.dismiss();
@@ -225,7 +367,6 @@ public class HomePageFragment extends Fragment{
             editor.putString("title", bookTitle);
             editor.putString("description", description);
             editor.apply();*/
-
 
             GeneralBookDetailFragment dialog = new GeneralBookDetailFragment();
             bundle.putString("title", bookTitle);

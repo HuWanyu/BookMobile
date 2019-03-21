@@ -16,67 +16,43 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/bg_transparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+      />
 
     <ListView
         android:id="@+id/searchList"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="10dp"
         android:layout_margin="8dp"
         android:background="@drawable/bg_transparent"/>
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
-        android:layout_width="395dp"
-        android:layout_height="204dp"
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginTop="5dp"
             android:padding="5dp"
-            android:background="@drawable/bg_transparent">
+           >
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Categories"
-                android:textSize="25dp"
-                android:textColor="#FFFFFF"/>
+                android:text="@string/categories_text"
+                android:textSize="40sp"
+                android:textColor="@color/darkGrey"/>
 
 
         <LinearLayout
+            android:id="@+id/category_cards"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Philosophy" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Sci-Fi" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Fiction" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Non-Fiction" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Fantasy" />
         </LinearLayout>
         </LinearLayout>
 
@@ -84,33 +60,28 @@
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView2"
-        android:paddingTop="5dp"
-        android:layout_width="395dp"
-        android:layout_height="204dp"
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
-        app:layout_constraintBottom_toTopOf="@id/horizontalScrollView3">
+        android:layout_marginEnd="8dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="5dp"
-            android:background="@drawable/bg_transparent">
+            android:layout_marginTop="5dp"
+            android:padding="5dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recommendations"
-            android:textColor="#FFFFFF"
-            android:textSize="25dp"/>
+            android:text="@string/rec_text"
+            android:textColor="@color/darkGrey"
+            android:textSize="40sp"/>
 
         <LinearLayout
-            android:id="@+id/buttonLayoutRec"
-            android:layout_width="wrap_content"
+            android:id="@+id/recommendation_cards"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
@@ -119,25 +90,5 @@
         </LinearLayout>
         </LinearLayout>
     </HorizontalScrollView>
-
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView3"
-        android:layout_width="395dp"
-        android:layout_height="204dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal" />
-    </HorizontalScrollView>
-
 
     </LinearLayout>
