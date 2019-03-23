@@ -271,7 +271,6 @@ public class HomePageFragment extends Fragment{
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(getActivity())
                 .setMessage("loading recommendations..")
-                .setTheme(R.style.Custom)
                 .setCancelable(false)
                 .build();
         waitingDialog.show();
@@ -301,7 +300,6 @@ public class HomePageFragment extends Fragment{
                                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                                 ll.addView(myButton, lp);*/
                             }
-                            Toasty.success(getContext(), "Loaded Recommendations", Toast.LENGTH_SHORT, true).show();
                             waitingDialog.dismiss();
 
                         } catch (Exception e) {

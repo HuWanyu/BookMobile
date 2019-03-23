@@ -144,9 +144,68 @@ public class AddListingFragment extends Fragment {
     public void addListingToServer(final String title, final String condition, final String location, final String timing, final String price){
 
         mQueue = Volley.newRequestQueue(getActivity());
-        // String url = "https://api.myjson.com/bins/1ayd4u";
-        String url = "http://bookmobile.apiblueprint.org/listing/_id?gid='abc'&tid=";
 
+        String url = "https://api.myjson.com/bins/192ib6";
+        final AlertDialog waitingDialog = new SpotsDialog.Builder()
+                .setContext(getActivity())
+                .setMessage("Adding New Book...")
+                .setCancelable(false)
+                .build();
+        waitingDialog.show();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d("RESPONSE", response.toString());
+                            // JSONObject validateObj = response.getJSONObject("loginValid");
+                            String status = response.getString("add_book");
+                            // JSONArray listedBooks = response.getJSONArray("books_listed");
+
+                            Log.d("LOGIN STATUS", "Username:" + status);
+
+                            if (status.equals("success")) {
+                                Toasty.success(getContext(), "Added Listing!", Toast.LENGTH_SHORT).show();
+                                waitingDialog.dismiss();
+                            }
+                            else
+                            {
+
+                                // Toasty.error(LoginActivity.this,"Wrong user!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+
+                            waitingDialog.dismiss();
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error instanceof NetworkError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                }  else if (error instanceof NoConnectionError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof TimeoutError) {
+                    waitingDialog.dismiss();
+                    Toasty.error(getContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                }
+                error.printStackTrace();
+            }
+        });
+
+
+
+        // String url = "https://api.myjson.com/bins/1ayd4u";
+       // String url = "http://bookmobile.apiblueprint.org/listing/_id?gid='abc'&tid=";
+
+       /* String url = "https://api.myjson.com/bins/192ib6";
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(getActivity())
                 .setMessage("Adding New Book...")
@@ -161,10 +220,11 @@ public class AddListingFragment extends Fragment {
                     public void onResponse(String response) {
                         try {
                             JSONObject validateObj = new JSONObject(response.toString());
-                            String user_id = validateObj.getString("user_id");
-                            Log.d("LOGIN STATUS", "Username:" + user_id);
-                            if (user_id.equals("bookmobileuser")) {
-
+                            String status = validateObj.getString("add_book");
+                            Log.d("Add Book", "AddBook:" + status);
+                            if (status.equals("success")) {
+                                Toasty.success(getContext(), "Added Listing!", Toast.LENGTH_SHORT).show();
+                                waitingDialog.dismiss();
                             }
                             else
                             {
@@ -207,7 +267,7 @@ public class AddListingFragment extends Fragment {
                 params.put("book_price_credit", price);
                 return params;
             }
-        };
+        };*/
         mQueue.add(request);
 
     }

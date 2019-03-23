@@ -63,9 +63,6 @@ public class MainActivity extends AppCompatActivity{
                 case R.id.mainNav_Profile:
                     mainViewPager.setCurrentItem(2);
                     return true;
-                case R.id.mainNav_Chat:
-                    mainViewPager.setCurrentItem(3);
-                    return true;
                 default:
                     mainViewPager.setCurrentItem(1);
                     return true;
@@ -119,20 +116,9 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onResume() {
+        super.onResume();
         int id = getIntent().getIntExtra("id", 0);
         if (id == 0){
-            Fragment fragmen = new HomePageFragment();
-            FragmentManager fmanger = getSupportFragmentManager();
-            FragmentTransaction transaction = fmanger.beginTransaction();
-            transaction.replace(R.id.main_view_pager, fragmen);
-            transaction.commit();
-            mainViewPager.setCurrentItem(1);
-
-            Intent i=new Intent();
-            i.setClass(MainActivity.this,HomePageFragment.class);
-            i.putExtra("id",0);
-        }
-        if (id == 1){
             Fragment fragmen = new AddListingFragment();
             FragmentManager fmanger = getSupportFragmentManager();
             FragmentTransaction transaction = fmanger.beginTransaction();
@@ -142,8 +128,21 @@ public class MainActivity extends AppCompatActivity{
 
             Intent i=new Intent();
             i.setClass(MainActivity.this, AddListingFragment.class);
+            i.putExtra("id",0);
+        }
+        if (id == 1){
+            Fragment fragmen = new HomePageFragment();
+            FragmentManager fmanger = getSupportFragmentManager();
+            FragmentTransaction transaction = fmanger.beginTransaction();
+            transaction.replace(R.id.main_view_pager, fragmen);
+            transaction.commit();
+            mainViewPager.setCurrentItem(1);
+
+            Intent i=new Intent();
+            i.setClass(MainActivity.this,HomePageFragment.class);
             i.putExtra("id",1);
         }
+
         if (id == 2) {
             Fragment fragmen = new ProfileFragment();
             FragmentManager fmanger = getSupportFragmentManager();
@@ -157,20 +156,6 @@ public class MainActivity extends AppCompatActivity{
             i.putExtra("id",2);
         }
 
-        if (id == 3) {
-            Fragment fragmen = new ChatFragment();
-            FragmentManager fmanger = getSupportFragmentManager();
-            FragmentTransaction transaction = fmanger.beginTransaction();
-            transaction.replace(R.id.main_view_pager, fragmen);
-            transaction.commit();
-            mainViewPager.setCurrentItem(3);//
-
-            Intent i=new Intent();
-            i.setClass(MainActivity.this,ChatFragment.class);
-            i.putExtra("id",3);
-            Log.d("Reached Chat Fragment", "Chat Frag open");
-        }
-        super.onResume();
     }
 
 }

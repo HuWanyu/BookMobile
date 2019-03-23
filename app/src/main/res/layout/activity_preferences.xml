@@ -50,6 +50,36 @@
         tools:layout_editor_absoluteY="440dp" />
 
 
+
+    <CheckBox
+        android:id="@+id/checkBoxHist"
+        android:layout_width="363dp"
+        android:layout_height="wrap_content"
+        android:text="History"
+        android:textSize="30dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintTop_toBottomOf="@id/checkBoxPhil"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="440dp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxFant"
+        android:layout_width="363dp"
+        android:layout_height="wrap_content"
+        android:text="Fantasy"
+        android:textSize="30dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintTop_toBottomOf="@id/checkBoxHist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="440dp" />
+
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="305dp"
@@ -64,23 +94,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <Button
+    <android.support.design.button.MaterialButton
         android:id="@+id/buttonSignUp"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:text="Sign Me Up!"
+        app:cornerRadius="30dp"
         app:layout_constraintTop_toBottomOf="@id/checkBoxPhil"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonBack"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <android.support.design.button.MaterialButton
         android:id="@+id/buttonBack"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:text="Back"
+        app:cornerRadius="30dp"
         app:layout_constraintStart_toEndOf="@id/buttonSignUp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

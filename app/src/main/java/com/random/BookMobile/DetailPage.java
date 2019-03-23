@@ -2,8 +2,10 @@ package com.random.BookMobile;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,9 +18,7 @@ public class DetailPage extends AppCompatActivity {
     private int bookID;
     private int userID;
 
-    private TextView giverNameText;
-    private TextView bookName;
-    private TextView bookDescription;
+    private TextView giverNameText, bookName, bookDescription, timeToMeet, costOfBook;
     private ImageView image;
 
     private Button eventdetailchat;
@@ -37,14 +37,33 @@ public class DetailPage extends AppCompatActivity {
 
         Intent intent = getIntent();
         String giverName = intent.getStringExtra("Giver Name");
+        final String phoneNumber = intent.getStringExtra("Contact Number");
+        String cost = String.valueOf(intent.getIntExtra("Cost",0));
+        Log.v("COst", cost);
+        String timing = intent.getStringExtra("Timing");
         String title = intent.getExtras().getString("title");
         String summary = intent.getExtras().getString("desc");
         giverNameText = findViewById(R.id.giver_name);
         bookName = findViewById(R.id.detailpage_name);
         bookDescription = findViewById(R.id.detailpage_description);
+        timeToMeet = findViewById(R.id.timeToMeet);
+        costOfBook = findViewById(R.id.costOfBook);
+
         giverNameText.setText(giverName);
         bookName.setText(title);
         bookDescription.setText(summary);
+        timeToMeet.append(timing);
+        costOfBook.append(cost);
+
+
+
+        image = findViewById(R.id.detailpage_imageBook);
+
+        if(title.equals("Harry Potter"))
+        {
+            image.setImageResource(R.mipmap.closed_book);
+        }
+
 
        // bookID = Integer.parseInt(intent.getStringExtra("BookID"));
        // userID = LoginActivity.getUserID();
@@ -73,9 +92,9 @@ public class DetailPage extends AppCompatActivity {
         eventdetailchat.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent goChat = new Intent(DetailPage.this, ChatFragment.class);
-                goChat.putExtra("id", 1);
-                startActivity(goChat);
+                Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+                sendIntent.setData(Uri.parse("sms:"+phoneNumber));
+                startActivity(sendIntent);
 
             }
         });
@@ -102,5 +121,7 @@ public class DetailPage extends AppCompatActivity {
         }
         */
     }
+
+
 
 }

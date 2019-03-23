@@ -1,6 +1,8 @@
 package com.random.BookMobile.MeActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -25,6 +27,7 @@ public class MeChangePersonalInfo extends AppCompatActivity {
     private EditText Email;
     private String newPassword;
     private String newEmail;
+    SharedPreferences prf;
     //private DatabaseHelp db = new DatabaseHelp(this);
 
     @Override
@@ -38,9 +41,18 @@ public class MeChangePersonalInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_personal_info);
 
-        userAvatar = findViewById(R.id.userAvatar);
+        Password = findViewById(R.id.inputPassword);
+        Email  = findViewById(R.id.inputEmail);
+        prf = getSharedPreferences("user_details", Context.MODE_PRIVATE);
+        String email = prf.getString("email",null);
+        String password = prf.getString("password", null);
 
-        switch (LoginActivity.getAvatarChoice()){
+        Password.setText(password);
+        Email.setText(email);
+
+        userAvatar = findViewById(R.id.userAvatar);
+        int userChoiceOfAvatar = getIntent().getIntExtra("User Choice of Avatar", 0);
+        switch (userChoiceOfAvatar){
             case 1:
                 userAvatar.setImageResource(R.drawable.books1);
                 break;
@@ -67,11 +79,14 @@ public class MeChangePersonalInfo extends AppCompatActivity {
         Confirm = findViewById(R.id.ConfirmChangePersonalInfo);
         Confirm.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Password = findViewById(R.id.inputPassword);
-                Email  = findViewById(R.id.inputEmail);
+
                 newPassword  =  Password.getText().toString();
                 newEmail = Email.getText().toString();
 
+                SharedPreferences.Editor editor = prf.edit();
+                editor.putString("password", newPassword);
+                editor.putString("email", newEmail);
+                editor.apply();
                 if(!newEmail.equals(""))
 //                    LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_EMAIL,newEmail);
 

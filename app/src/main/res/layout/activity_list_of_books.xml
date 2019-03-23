@@ -6,66 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.random.BookMobile.MeActivity.BooksInfoList">
 
-    <ScrollView
-        android:id="@+id/ranking"
-        android:layout_width="367dp"
-        android:layout_height="494dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+
+    <ListView
+        android:id="@+id/listOfBooks"
+        android:layout_width="395dp"
+        android:layout_height="715dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.961">
-
-        <view
-            android:id="@+id/MeBookListRV"
-            class="android.support.v7.widget.RecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="21dp"
-            tools:layout_editor_absoluteY="205dp">
-
-        </view>
-    </ScrollView>
-
-    <TextView
-        android:id="@+id/booklist"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/ranking"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="My Books"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/ranking"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bookimage"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/bookimage"
-        android:layout_width="254dp"
-        android:layout_height="92dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/ranking"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.112"
-        app:srcCompat="@drawable/books" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

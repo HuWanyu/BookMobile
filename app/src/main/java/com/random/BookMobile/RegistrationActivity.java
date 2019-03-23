@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +42,10 @@ public class RegistrationActivity extends AppCompatActivity{
         mPassword = findViewById(R.id.passwordRegInput);
         mEmail = findViewById(R.id.emailRegInput);
 
+        final TextInputLayout usernameWrapper = findViewById(R.id.usernameRegLabel);
+        final TextInputLayout passwordWrapper = findViewById(R.id.passwordRegLabel);
+        final TextInputLayout emailWrapper = findViewById(R.id.emailRegLabel);
+
         mRegiterSubmitBtn = findViewById(R.id.registerButton);
         mCancelBtn = findViewById(R.id.cancelButton);
 
@@ -52,13 +57,18 @@ public class RegistrationActivity extends AppCompatActivity{
                 String email = mEmail.getText().toString().trim();
 
                 if(!checkAccountInfoEligibility(username, password, email))
-                    Toasty.error(getApplicationContext(), "Invalid input. Please make sure to fill in all fields correctly.", Toast.LENGTH_SHORT).show();
+                {
+                    if(username.equals(""))
+                    usernameWrapper.setError("Please enter appropriate input for this field");
+                    if(password.equals(""))
+                    passwordWrapper.setError("Please enter appropriate input for this field");
+                    if(email.equals(""))
+                     emailWrapper.setError("Please enter appropriate input for this field");
+                }
                 else
                     createNewAccount(username, password,email);
 
-                mUsername.setText("");
-                mPassword.setText("");
-                mEmail.setText("");
+
 
               /*  if(!username.equals("") && !password.equals("") && !email.equals(""))
                     createNewAccount(username, password, email);
@@ -117,6 +127,9 @@ public class RegistrationActivity extends AppCompatActivity{
             toPreferences.putExtra("newUser", username);
             toPreferences.putExtra("Pass", password);
             toPreferences.putExtra("Email", email);
+            mUsername.setText("");
+            mPassword.setText("");
+            mEmail.setText("");
             startActivity(toPreferences);
         }
     }

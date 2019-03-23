@@ -60,6 +60,7 @@ public class UpdateAvatar extends AppCompatActivity {
             public void onClick(View v){
 //                LoginActivity.UpdateUserInfo(AccountContract.AccountEntry.COLUMN_AVATAR,userChoiceofAvatar);
                 Intent Back = new Intent(UpdateAvatar.this, MeChangePersonalInfo.class);
+                Back.putExtra("User Choice of Avatar", userChoiceofAvatar);
                 startActivity(Back);
             }
         });

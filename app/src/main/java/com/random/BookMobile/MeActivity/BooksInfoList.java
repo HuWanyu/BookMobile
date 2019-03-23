@@ -1,16 +1,21 @@
 package com.random.BookMobile.MeActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ListView;
 
 import com.random.BookMobile.LoginActivity;
 import com.random.BookMobile.MainActivity;
 import com.random.BookMobile.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +27,12 @@ public class BooksInfoList extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ArrayList<String> EventName = new ArrayList<>();
-    private List<Integer> EventID = new ArrayList<Integer>();
+    SharedPreferences prf;
+
+    ListView bookList;
+
+    private ArrayList<String> BookName = new ArrayList<>();
+    private ArrayList<String> BookDesc = new ArrayList<String>();
     @Override
     public void onBackPressed() {
         Intent goBack = new Intent(BooksInfoList.this, MainActivity.class);
@@ -35,36 +44,25 @@ public class BooksInfoList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_books);
 
-//uncomment after database is up
-/*
-        DatabaseHelp dbHelper = new DatabaseHelp(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor eventCursor = dbHelper.viewMyEvent(LoginActivity.getUserID());
+         prf = getSharedPreferences("user_details",MODE_PRIVATE);
+         String listedBooks = prf.getString("listed books", null);
+         try {
+             JSONArray books = new JSONArray(listedBooks);
+             for(int i = 0; i<books.length(); i++)
+             {
+                 BookName.add(books.get(i).toString());
+             }
+         }
+         catch (JSONException e)
+         {
+
+         }
+
+        bookList = findViewById(R.id.listOfBooks);
+        BooksInfoListAdapter adapter = new BooksInfoListAdapter(this, BookName);
+        bookList.setAdapter(adapter);
 
 
-        while (eventCursor.moveToNext())
-        {
-            int eventIndex = eventCursor.getColumnIndex("Event_Name");
-            int statusIndex = eventCursor.getColumnIndex("Event_Approval_Status");
-            String eventName = eventCursor.getString(eventIndex)+" ("+eventCursor.getString(statusIndex)+")";
-            EventName.add(eventName);
-
-            int IDIndex = eventCursor.getColumnIndex("Event_ID");
-            int eventID = eventCursor.getInt(IDIndex);
-            EventID.add(eventID);
-        }
-        db.close();
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.MeBookListRV);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager((mLayoutManager));
-
-        mAdapter = new BooksInfoListAdapter(getBaseContext(), EventName, EventID);
-        mRecyclerView.setAdapter(mAdapter);
-
-
-*/
 
     }
 

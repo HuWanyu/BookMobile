@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         loginSuccessIntent = new Intent(LoginActivity.this, MainActivity.class);
         pref = getSharedPreferences("user_details",MODE_PRIVATE);
         if(pref.contains("username") && pref.contains("password")) {
+            loginSuccessIntent.putExtra("id", 1);
             startActivity(loginSuccessIntent);
         }
 
@@ -121,11 +122,11 @@ public class LoginActivity extends AppCompatActivity {
         mQueue = Volley.newRequestQueue(LoginActivity.this);
        // String url = "https://api.myjson.com/bins/1ayd4u";
         //String url = "https://private-a3ace9-bookmobile2.apiary-mock.com/user/"+username;
+        //https://api.myjson.com/bins/huzyq
         String url = "https://api.myjson.com/bins/13jrwu";
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(LoginActivity.this)
                 .setMessage("Validating User...")
-                .setTheme(R.style.Custom)
                 .setCancelable(false)
                 .build();
         waitingDialog.show();
@@ -140,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                                 String user_id = response.getString("user_id");
                                String user_email = response.getString("user_email");
                                String user_credits = response.getString("credits");
-                              // JSONArray listedBooks = response.getJSONArray("books_listed");
+                                JSONArray listedBooks = response.getJSONArray("books_listed");
 
                                 Log.d("LOGIN STATUS", "Username:" + user_id);
 
@@ -151,11 +152,11 @@ public class LoginActivity extends AppCompatActivity {
                                     editor.putString("password", password);
                                     editor.putString("email", user_email);
                                     editor.putString("credits", user_credits);
-                                   // editor.putString("listed books", listedBooks.toString());
+                                    editor.putString("listed books", listedBooks.toString());
                                     editor.apply();
                                     Toasty.success(LoginActivity.this, "Welcome back, " + username, Toast.LENGTH_SHORT, true).show();
                                     //loginSuccessIntent.putExtra("loginUser", username);
-
+                                    loginSuccessIntent.putExtra("id", 1);
                                     startActivity(loginSuccessIntent);
                                     finish();
                                 }

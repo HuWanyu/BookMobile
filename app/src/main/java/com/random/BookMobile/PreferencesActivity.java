@@ -108,7 +108,6 @@ public class PreferencesActivity extends AppCompatActivity {
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(PreferencesActivity.this)
                 .setMessage("Creating User...")
-                .setTheme(R.style.Custom)
                 .setCancelable(false)
                 .build();
         waitingDialog.show();
@@ -137,7 +136,7 @@ public class PreferencesActivity extends AppCompatActivity {
                                 editor.apply();
                                 Toasty.success(PreferencesActivity.this, "Welcome, " + username, Toast.LENGTH_SHORT, true).show();
                                 Intent regSuccessIntent = new Intent(PreferencesActivity.this, MainActivity.class);
-
+                                regSuccessIntent.putExtra("id",1);
                                 startActivity(regSuccessIntent);
                                 finish();
                             }

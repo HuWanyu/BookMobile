@@ -46,5 +46,5 @@ public class MyListAdapter extends ArrayAdapter {
 
         return rowView;
 
-    };
+    }
 }

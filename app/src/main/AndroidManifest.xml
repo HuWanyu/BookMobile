@@ -19,6 +19,7 @@
 
 	<activity android:name=".PreferencesActivity">
     </activity>
+        <activity android:name=".MeActivity.UpdateAvatar"></activity>
         <activity android:name=".DetailPage"></activity>
         <activity android:name=".MeActivity.MeChangePersonalInfo"></activity>
         <activity android:name=".MeActivity.BooksInfoList"></activity>

@@ -49,6 +49,9 @@
     <string name="categories_text">Categories</string>
     <string name="rec_text">Recommendations</string>
 
+    <string name="list_it">List It!</string>
+    <string name="take_it">Take It!</string>
+
     <string name="logout_text">Logout</string>
 
     <string-array name="ampmarray">

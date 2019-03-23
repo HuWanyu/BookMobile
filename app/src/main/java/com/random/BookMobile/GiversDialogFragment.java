@@ -82,7 +82,7 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
     }
 
     private void getData() {
-        String url = "https://api.myjson.com/bins/dfojq";
+        String url = "https://api.myjson.com/bins/85msy";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -148,23 +148,29 @@ public class GiversDialogFragment extends AppCompatDialogFragment {
                 // TODO Auto-generated method stub
                 if(position == 0) {
                     individualBook.putExtra("Giver Name", giversNames.get(0));
+                    individualBook.putExtra("Timing", timings.get(0));
+                    individualBook.putExtra("Cost", costs.get(0));
+                    individualBook.putExtra("Contact Number", "98786789");
                     //code specific to first list item
-                    Toasty.info(getContext(),"Giver selected:"+giversNames.get(0),Toast.LENGTH_SHORT).show();
                     startActivity(individualBook);
 
                 }
 
                 else if(position == 1) {
                     individualBook.putExtra("Giver Name", giversNames.get(1));
+                    individualBook.putExtra("Timing", timings.get(1));
+                    individualBook.putExtra("Cost", costs.get(1));
+                    individualBook.putExtra("Contact Number", "98786789");
                     //code specific to 2nd list item
-                    Toasty.info(getContext(),"Giver selected:"+giversNames.get(1),Toast.LENGTH_SHORT).show();
                     startActivity(individualBook);
                 }
 
                 else if(position == 2) {
                     individualBook.putExtra("Giver Name", giversNames.get(2));
+                    individualBook.putExtra("Timing", timings.get(2));
+                    individualBook.putExtra("Cost", costs.get(2));
+                    individualBook.putExtra("Contact Number", "98786789");
                     //code specific to 2nd list item
-                    Toasty.info(getContext(),"Giver selected:"+giversNames.get(2),Toast.LENGTH_SHORT).show();
                     startActivity(individualBook);
                 }
 
