@@ -1,6 +1,7 @@
 package com.random.BookMobile.Fragments_Bar;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -21,6 +22,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.content.Intent;
@@ -86,53 +88,131 @@ public class HomePageFragment extends Fragment{
         username = prf.getString("username",null);
         bundle = new Bundle();
 
-        categoryCards = v.findViewById(R.id.category_cards);
-        recoCards = v.findViewById(R.id.recommendation_cards);
+        String[] bookList = getResources().getStringArray(R.array.example_Books);
 
-        //Loads recommendations by calling API
-        loadRecommendations(username);
+        for (int i = 0; i < bookList.length; i++) {
+           bookNames.add(bookList[i]);
+        }
+
+       // getSearchData();
+        SearchView searchView = (SearchView) v.findViewById(R.id.searchview1);
+        searchView.setInputType(1);
+
+        final ListView searchList = v.findViewById(R.id.searchList);
+        searchList.bringToFront();
+        searchList.setVisibility(View.INVISIBLE);
 
         //implementation of Search View
-        SearchView simpleSearchView = (SearchView) v.findViewById(R.id.searchview1);
-        simpleSearchView.setQueryHint("Search for a book...");
-        int bookNamesSize = getResources().getStringArray(R.array.example_Books).length;
-        for(int i=0; i<bookNamesSize; i++)
-        {
-            String bookName = getResources().getStringArray(R.array.example_Books)[i];
-            bookNames.add(bookName);
-        }
-        final ListView searchList = v.findViewById(R.id.searchList);
         final SearchResultAdapter arrayAdapter = new SearchResultAdapter(getContext(),bookNames);
         // Set The Adapter
-        searchList.setVisibility(View.INVISIBLE);
         searchList.setAdapter(arrayAdapter);
 
+        searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String desc, name;
+                name="";
+                desc = "";
+                if(position==0)
+                {
+                    name = bookNames.get(0);
+                    if(name.equals("Crime & Punishment"))
+                        desc = "Crime & Punishment description string";
+                    if(name.equals("Harry Potter"))
+                        desc = "Harry Potter description string";
+                    if(name.equals("Snow Crash"))
+                        desc = "Snow Crash description string";
+                    if(name.equals("No Easy Day"))
+                        desc = "No Easy Day description string";
+                    if(name.equals("Cooking Recipes"))
+                        desc = "Cooking Recipes description string";
+                    Log.v("Book Name", bookNames.get(0));
+                }
+                if(position==1)
+                {
+                    name = bookNames.get(1);
+                    if(name.equals("Crime & Punishment"))
+                        desc = "Crime & Punishment description string";
+                    if(name.equals("Harry Potter"))
+                        desc = "Harry Potter description string";
+                    if(name.equals("Snow Crash"))
+                        desc = "Snow Crash description string";
+                    if(name.equals("No Easy Day"))
+                        desc = "No Easy Day description string";
+                    if(name.equals("Cooking Recipes"))
+                        desc = "Cooking Recipes description string";
+                    Log.v("Book Name", bookNames.get(1));
+                }
+                if(position==2)
+                {
+                    name = bookNames.get(2);
+                    if(name.equals("Crime & Punishment"))
+                        desc = "Crime & Punishment description string";
+                    if(name.equals("Harry Potter"))
+                        desc = "Harry Potter description string";
+                    if(name.equals("Snow Crash"))
+                        desc = "Snow Crash description string";
+                    if(name.equals("No Easy Day"))
+                        desc = "No Easy Day description string";
+                    if(name.equals("Cooking Recipes"))
+                        desc = "Cooking Recipes description string";
+                    Log.v("Book Name", bookNames.get(2));
+                }
+                if(position==3)
+                {
+                    name = bookNames.get(3);
+                    if(name.equals("Crime & Punishment"))
+                        desc = "Crime & Punishment description string";
+                    if(name.equals("Harry Potter"))
+                        desc = "Harry Potter description string";
+                    if(name.equals("Snow Crash"))
+                        desc = "Snow Crash description string";
+                    if(name.equals("No Easy Day"))
+                        desc = "No Easy Day description string";
+                    if(name.equals("Cooking Recipes"))
+                        desc = "Cooking Recipes description string";
+                    Log.v("Book Name", bookNames.get(3));
+                }
+                GeneralBookDetailFragment dialog = new GeneralBookDetailFragment();
+                bundle.putString("title", name);
+                bundle.putString("desc", desc);
+                dialog.setArguments(bundle);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("Book Details");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                dialog.show(getChildFragmentManager(), "Book Details");
+                Log.i("TAG", "Just showed dialog for "+view.getTag().toString());
+
+            }
+        });
+
         // perform set on query text listener event
-        simpleSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Call Volley Request here
-                if(query.length()==0)
-                {
-                    searchList.setVisibility(View.INVISIBLE);
-                }
-                searchList.setVisibility(View.VISIBLE);
-              String text = query;
-              arrayAdapter.filter(text);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-              /*  String text = newText;
-                arrayAdapter.filter(text);*/
-              if(newText.length()==0)
-              {
-                  searchList.setVisibility(View.INVISIBLE);
-              }
+                searchList.setVisibility(View.VISIBLE);
+                String text = newText;
+                arrayAdapter.filter(text);
+                if(newText.length() == 0)
+                {
+                    searchList.setVisibility(View.INVISIBLE);
+                }
                 return false;
             }
         });
+        categoryCards = v.findViewById(R.id.category_cards);
+        recoCards = v.findViewById(R.id.recommendation_cards);
+
+        //Loads recommendations by calling API
+        loadRecommendations(username);
 
         //display categories
         createNewCategoryCard("Philosophy", R.mipmap.yin_yang);
@@ -141,6 +221,49 @@ public class HomePageFragment extends Fragment{
         createNewCategoryCard("History", R.mipmap.hourglass);
 
         return v;
+    }
+
+    public void getSearchData() {
+        mQueue = Volley.newRequestQueue(getActivity());
+        String url ="https://api.myjson.com/bins/10dtfy";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            JSONArray jsonArray = response.getJSONArray("search_books");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                String bookName = jsonArray.getString(i);
+                                bookNames.add(bookName);
+                                Log.v("Book Name " + i, bookName);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error instanceof NetworkError) {
+
+                    Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+
+                    Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                }  else if (error instanceof NoConnectionError) {
+
+                    Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof TimeoutError) {
+
+                    Toasty.error(getContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                }
+                error.printStackTrace();
+            }
+        });
+        mQueue.add(request);
     }
 
     public void createNewCategoryCard(String title, int id){

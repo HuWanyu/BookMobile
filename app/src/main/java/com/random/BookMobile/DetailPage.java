@@ -59,10 +59,9 @@ public class DetailPage extends AppCompatActivity {
 
         image = findViewById(R.id.detailpage_imageBook);
 
-        if(title.equals("Harry Potter"))
-        {
+
             image.setImageResource(R.mipmap.closed_book);
-        }
+
 
 
        // bookID = Integer.parseInt(intent.getStringExtra("BookID"));

@@ -52,6 +52,8 @@
     <string name="list_it">List It!</string>
     <string name="take_it">Take It!</string>
 
+    <string name="search_hint">Search books</string>
+
     <string name="logout_text">Logout</string>
 
     <string-array name="ampmarray">
@@ -66,10 +68,11 @@
     </string-array>
 
     <string-array name = "example_Books">
+        <item> Snow Crash </item>
         <item> Harry Potter </item>
-        <item> Game of Thrones </item>
         <item> Cooking Recipes </item>
-
+        <item> Crime &amp; Punishment </item>
+        <item> Game of Thrones </item>
     </string-array>
 
 </resources>

@@ -3,18 +3,19 @@
     android:layout_height="fill_parent"
     android:padding="10dp">
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Book : "
-        android:textColor="#FFF"/>
+        android:textColor="#000"
+        android:textSize="25sp"/>-->
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/nameLabel"
-        android:textColor="#FFF"/>
+        android:textColor="#000"
+        android:textSize="25sp"/>
 
 </RelativeLayout>

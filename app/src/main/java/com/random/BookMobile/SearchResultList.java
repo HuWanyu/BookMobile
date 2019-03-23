@@ -2,7 +2,9 @@ package com.random.BookMobile;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -22,13 +24,19 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.random.BookMobile.Fragments_Bar.AddListingFragment;
+import com.random.BookMobile.MeActivity.BooksInfoList;
+import com.random.BookMobile.MeActivity.BooksInfoListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,13 +46,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import dmax.dialog.SpotsDialog;
+import es.dmoral.toasty.Toasty;
 
 public class SearchResultList extends AppCompatDialogFragment {
 
-   /* ListView searchbooklist;
+    View customSearchList;
+    private RequestQueue mQueue;
+    ListView searchbooklist;
     ArrayAdapter<String> adapter;
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
+    {
+        return customSearchList;
+    }
+
+
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_search_result);
@@ -54,10 +73,9 @@ public class SearchResultList extends AppCompatDialogFragment {
         ArrayList<String> arrayBooks = new ArrayList<>();
         arrayBooks.addAll(Arrays.asList(getResources().getStringArray(R.array.example_Books)));
 
-        adapter = new ArrayAdapter<String>(
-                SearchResultList.this
-                android.R.layout.simple_list_item_1,
-                arrayBooks
+       // BooksInfoListAdapter adapter = new BooksInfoListAdapter();
+
+        adapter = new ArrayAdapter<String>(SearchResultList.this, android.R.layout.simple_list_item_1, arrayBooks
         );
 
         searchbooklist.setAdapter(adapter);
@@ -83,7 +101,8 @@ public class SearchResultList extends AppCompatDialogFragment {
             }
         });
         return true;
-    }*/
+    }
+}*/
 }
 
 

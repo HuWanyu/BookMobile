@@ -123,7 +123,9 @@ public class LoginActivity extends AppCompatActivity {
        // String url = "https://api.myjson.com/bins/1ayd4u";
         //String url = "https://private-a3ace9-bookmobile2.apiary-mock.com/user/"+username;
         //https://api.myjson.com/bins/huzyq
-        String url = "https://api.myjson.com/bins/13jrwu";
+        //https://api.myjson.com/bins/13jrwu
+
+        String url = "https://api.myjson.com/bins/huzyq";
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(LoginActivity.this)
                 .setMessage("Validating User...")

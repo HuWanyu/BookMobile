@@ -6,50 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.random.BookMobile.MeActivity.BooksInfoList">
 
-    <ScrollView
-        android:id="@+id/searchranking"
-        android:layout_width="367dp"
-        android:layout_height="494dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+
+    <ListView
+        android:id="@+id/searchbooklist"
+        android:layout_width="395dp"
+        android:layout_height="715dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.961">
-
-        <view
-            android:id="@+id/searchbooklistRV"
-            class="android.support.v7.widget.RecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="21dp"
-            tools:layout_editor_absoluteY="205dp">
-
-        </view>
-    </ScrollView>
-
-    <TextView
-        android:id="@+id/searchbooklist"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignStart="@+id/searchranking"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="104dp"
-        android:text="My Books"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/searchranking"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

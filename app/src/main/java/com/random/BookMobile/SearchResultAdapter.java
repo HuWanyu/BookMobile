@@ -67,10 +67,8 @@ public class SearchResultAdapter extends BaseAdapter {
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
         bookNameList.clear();
-        notifyDataSetChanged();
         if (charText.length() == 0) {
-            bookNameList.clear();
-            notifyDataSetChanged();
+           // bookNameList.addAll(searchBooksArrayList);
         } else {
             for (String wp : searchBooksArrayList) {
                 if (wp.toLowerCase(Locale.getDefault()).contains(charText)) {
