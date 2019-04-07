@@ -1,5 +1,6 @@
 package com.random.BookMobile.Fragments_Bar;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -25,7 +26,20 @@ import android.widget.Button;
 import android.content.Intent;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.random.BookMobile.MeActivity.BooksInfoList;
 import com.random.BookMobile.MeActivity.MeChangePersonalInfo;
 import com.random.BookMobile.R;
@@ -34,6 +48,15 @@ import com.random.BookMobile.R;
 import com.random.BookMobile.LoginActivity;
 import com.random.BookMobile.MainActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+
+import dmax.dialog.SpotsDialog;
+import es.dmoral.toasty.Toasty;
 
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
@@ -43,6 +66,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM2 = "param2";
 
     SharedPreferences prf;
+    String jwt_token;
+    private RequestQueue mQueue;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -51,9 +76,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     public Button BooksList;
     public Button IREvents;
     public Button LogOut;
-    private TextView userid;
-    private TextView userEmail;
-    private TextView userCredits;
+    TextView userid;
+    TextView userEmail;
+    TextView userCredits;
+    String listings;
     private OnFragmentInteractionListener mListener;
     private ImageView Avatar;
 
@@ -86,13 +112,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         userEmail = view.findViewById(R.id.UserEmail);
         userCredits = view.findViewById(R.id.UserCredits);
         prf = getActivity().getSharedPreferences("user_details",Context.MODE_PRIVATE);
-        String email = prf.getString("email",null);
-        String credits = prf.getString("credits", null);
-        String username = prf.getString("username",null);
-        Log.v("USERNAME - PROFILE", username);
-        userid.setText(username);
-        userEmail.setText(email);
-        userCredits.append(" "+credits);
+        jwt_token = prf.getString("jwt_token", null);
+        retrieveUserDetails(jwt_token);
 
         LogOut = view.findViewById(R.id.LogOut);
         LogOut.setOnClickListener(this);
@@ -100,7 +121,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         IREvents.setOnClickListener(this);
 
         Avatar=view.findViewById(R.id.UserDp);
-        switch (LoginActivity.getAvatarChoice()){
+       /* switch (LoginActivity.getAvatarChoice()){
             case 1:
                 Avatar.setImageResource(R.drawable.books1);
                 break;
@@ -113,9 +134,111 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             case 4:
                 Avatar.setImageResource(R.drawable.books4);
                 break;
-        }
+        }*/
 
         return view;
+    }
+
+    public void retrieveUserDetails(final String jwt)
+    {
+        mQueue = Volley.newRequestQueue(getActivity());
+
+        String url ="https://bookmobile-backend.herokuapp.com/user/me";
+        final AlertDialog waitingDialog = new SpotsDialog.Builder()
+                .setContext(getActivity())
+                .setMessage("retrieving user data..")
+                .setCancelable(false)
+                .build();
+        waitingDialog.show();
+
+            //POST REQUEST:
+            StringRequest request = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                String error = null;
+                                String user_id = null;
+                                String userCreds = null;
+                                String user_email = null;
+                                String user_pref = null;
+
+                                Log.d("Response - Profile Frag", response);
+                                JSONObject validateObj = new JSONObject(response);
+                                if(validateObj.has("error"))
+                                    error = validateObj.getString("error");
+                                else
+                                {
+                                    user_id = validateObj.getString("user_id");
+                                    userCreds = validateObj.getString("credits");
+                                    user_email = validateObj.getString("user_email");
+                                    user_pref = validateObj.getString("preference");
+                                    listings = validateObj.getJSONArray("listings").toString();
+                                    userid.setText(user_id);
+                                    userCredits.append(" "+userCreds);
+                                    userEmail.setText(user_email);
+
+                                    SharedPreferences.Editor editor = prf.edit();
+                                    editor.putString("email", user_email);
+                                    editor.putString("preference", user_pref);
+                                    editor.apply();
+                                }
+
+                                if(error!=null) {
+                                    waitingDialog.dismiss();
+                                    Toasty.error(getContext(), error, Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    waitingDialog.dismiss();
+                                }
+
+                            } catch (Exception e) {
+
+                                waitingDialog.dismiss();
+                                Toasty.error(getContext(), "Server Error!", Toast.LENGTH_SHORT, true).show();
+
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof NetworkError) {
+                        waitingDialog.dismiss();
+                        Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                    } else if (error instanceof ServerError) {
+                        waitingDialog.dismiss();
+                        Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                    }  else if (error instanceof NoConnectionError) {
+                        waitingDialog.dismiss();
+                        Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                    } else if (error instanceof TimeoutError) {
+                        waitingDialog.dismiss();
+                        Toasty.error(getContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                    }
+                    error.printStackTrace();
+                }
+            })
+            {
+                /** Passing some request headers* */
+                @Override
+                public Map getHeaders() throws AuthFailureError {
+                    HashMap headers = new HashMap();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("api-token", jwt);
+                    return headers;
+                }
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+
+            };
+
+            mQueue.add(request);
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -160,7 +283,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
             case R.id.BooksList:
                 Intent startNewActivity3 = new Intent(getContext(), BooksInfoList.class);
-
+                SharedPreferences.Editor editor1 = prf.edit();
+                editor1.putString("listed books", listings);
+                editor1.apply();
+                Log.v("listings", listings);
                 startActivity(startNewActivity3);
                 break;
 

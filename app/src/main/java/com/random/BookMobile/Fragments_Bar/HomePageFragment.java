@@ -33,6 +33,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -41,7 +42,9 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.random.BookMobile.GeneralBookDetailFragment;
 import com.random.BookMobile.LoginActivity;
@@ -53,6 +56,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
@@ -61,7 +66,7 @@ public class HomePageFragment extends Fragment{
 
     private static final String TAG = "Home Page";
     Button lotfButton;
-    String username;
+    String jwt_token, preference;
     TextView welcomeText;
     SharedPreferences prf;
     private RequestQueue mQueue;
@@ -85,7 +90,13 @@ public class HomePageFragment extends Fragment{
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.home_fragment, container, false);
         prf = getActivity().getSharedPreferences("user_details", Context.MODE_PRIVATE);
-        username = prf.getString("username",null);
+        jwt_token = prf.getString("jwt_token",null);
+        if(prf.contains("preference")) {
+            preference = prf.getString("preference", null);
+            loadRecommendations(preference);
+        }
+        else
+            getPreferences(jwt_token);
         bundle = new Bundle();
 
         String[] bookList = getResources().getStringArray(R.array.example_Books);
@@ -210,9 +221,6 @@ public class HomePageFragment extends Fragment{
         });
         categoryCards = v.findViewById(R.id.category_cards);
         recoCards = v.findViewById(R.id.recommendation_cards);
-
-        //Loads recommendations by calling API
-        loadRecommendations(username);
 
         //display categories
         createNewCategoryCard("Philosophy", R.mipmap.yin_yang);
@@ -372,7 +380,10 @@ public class HomePageFragment extends Fragment{
         textview.setLayoutParams(layoutparamsMPWP);
         textview.setText(title);
         textview.setGravity(Gravity.CENTER_HORIZONTAL);
-        textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
+        if(textview.length()>10)
+            textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
+        else
+            textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
         textview.setTextColor(Color.rgb(0,0,0));
 
         container.addView(textview);
@@ -386,11 +397,11 @@ public class HomePageFragment extends Fragment{
 
     }
 
-    public void loadRecommendations(String username)
+    public void loadRecommendations(String book_cat)
     {
         mQueue = Volley.newRequestQueue(getActivity());
-        String url = "https://api.myjson.com/bins/f6xjy";
-
+       // String url = "https://api.myjson.com/bins/f6xjy";
+        String url = "https://bookmobile-backend.herokuapp.com/book/cat/"+book_cat.replaceAll(" ", "%20");
         final AlertDialog waitingDialog = new SpotsDialog.Builder()
                 .setContext(getActivity())
                 .setMessage("loading recommendations..")
@@ -398,30 +409,19 @@ public class HomePageFragment extends Fragment{
                 .build();
         waitingDialog.show();
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
                         try {
-                            JSONArray bookArray = response.getJSONArray("Books");
-                            bundle.putString("JSON bookArray", bookArray.toString());
-                            for(int i=0; i<bookArray.length();i++)
+                            bundle.putString("JSON bookArray", response.toString());
+                            for(int i=0; i<response.length();i++)
                             {
-                                // Code that adds buttons programmatically - will be used when generating new recommended books
-                                JSONObject book = bookArray.getJSONObject(i);
-                                bookTitle = book.getString("title");
-                                description = book.getString("desc");
-                                // Put anything what you want
-                               /* MaterialButton myButton = new MaterialButton(getContext());
-                                myButton.setText(bookTitle);
-                                myButton.setTag(bookTitle);
-                                myButton.setOnClickListener(btnclick);*/
-                                createNewRecoCard(bookTitle);
-                                //CardView cardView = v.findViewById(R.id.categories_card_view);
+                                JSONObject book = response.getJSONObject(i);
+                                bookTitle = book.getString("book_name");
+                                description = book.getString("book_desc");
 
-                              /*  LinearLayout ll = (LinearLayout) v.findViewById(R.id.buttonLayoutRec);
-                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                                ll.addView(myButton, lp);*/
+                                createNewRecoCard(bookTitle);
                             }
                             waitingDialog.dismiss();
 
@@ -456,24 +456,95 @@ public class HomePageFragment extends Fragment{
         mQueue.add(request);
     }
 
+    public void getPreferences(final String jwt)
+    {
+        mQueue = Volley.newRequestQueue(getActivity());
+
+        String url ="https://bookmobile-backend.herokuapp.com/user/me";
+
+        //POST REQUEST:
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            String error = null;
+
+                            Log.d("Response - Home FRAG", response);
+                            JSONObject validateObj = new JSONObject(response);
+                            if(validateObj.has("error"))
+                                error = validateObj.getString("error");
+
+                            if(validateObj.has("preference")) {
+                                preference = validateObj.getString("preference");
+                                loadRecommendations(preference);
+
+                            }
+                            if(error!=null) {
+                                Toasty.error(getContext(), error, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toasty.error(getContext(), "Server Error!", Toast.LENGTH_SHORT, true).show();
+
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error instanceof NetworkError) {
+
+                    Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+
+                    Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                }  else if (error instanceof NoConnectionError) {
+
+                    Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                } else if (error instanceof TimeoutError) {
+
+                    Toasty.error(getContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                }
+                error.printStackTrace();
+            }
+        })
+        {
+            /** Passing some request headers* */
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/json");
+                headers.put("api-token", jwt);
+                return headers;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        mQueue.add(request);
+
+    }
     View.OnClickListener btnclick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             String bookTitle = view.getTag().toString();
             String bookDesc = "";
-           // String noOfBooksAvail = "";
-            //String noOfTakers = "";
+            String noOfBooksAvail = "";
+            String noOfTakers = "";
             try {
                 JSONArray books = new JSONArray(bundle.getString("JSON bookArray"));
                 for(int i=0; i<=books.length();i++)
                 {
                    JSONObject book = books.getJSONObject(i);
-                   String titleOfBook = book.getString("title");
+                   String titleOfBook = book.getString("book_name");
                    if(bookTitle.equals(titleOfBook))
                    {
-                     bookDesc = book.getString("desc");
-                   //  noOfBooksAvail = book.getString("number_books_available");
-                   //  noOfTakers = book.getString("number_books_takers");
+                     bookDesc = book.getString("book_desc");
+                     noOfBooksAvail = book.getString("num_book_available");
+                     noOfTakers = book.getString("num_book_takers");
                    }
                 }
             }
@@ -484,14 +555,11 @@ public class HomePageFragment extends Fragment{
 
             Toasty.success(getContext(), bookTitle, Toast.LENGTH_SHORT ).show();
 
-           /* SharedPreferences.Editor editor = prf.edit();
-            editor.putString("title", bookTitle);
-            editor.putString("description", description);
-            editor.apply();*/
-
             GeneralBookDetailFragment dialog = new GeneralBookDetailFragment();
             bundle.putString("title", bookTitle);
             bundle.putString("desc", bookDesc);
+            bundle.putString("available copies", noOfBooksAvail);
+            bundle.putString("taker count", noOfTakers);
             dialog.setArguments(bundle);
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("Book Details");

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:text="Medium Text"
         android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:padding="2dp"
@@ -18,11 +18,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Condition"
+            android:text="Cost"
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_marginLeft="10dp"
@@ -31,7 +30,7 @@
             android:textColor="#4d4d4d" />
 
         <TextView
-            android:id="@+id/bookCond"
+            android:id="@+id/cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Medium Text"
@@ -39,6 +38,37 @@
             android:layout_marginTop="5dp"
             android:padding="2dp"
             android:textColor="#4d4d4d" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:padding="2dp"
+            android:textColor="#4d4d4d" />
+
+        <TextView
+            android:id="@+id/meetLoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="5dp"
+            android:padding="2dp"
+            android:textColor="#4d4d4d" />
+
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -64,7 +94,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cost"
+            android:text="Condition"
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_marginLeft="10dp"
@@ -73,7 +103,7 @@
             android:textColor="#4d4d4d" />
 
         <TextView
-            android:id="@+id/cost"
+            android:id="@+id/bookCond"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Medium Text"
@@ -81,6 +111,9 @@
             android:layout_marginTop="5dp"
             android:padding="2dp"
             android:textColor="#4d4d4d" />
+
+
+
 
     </LinearLayout>
 

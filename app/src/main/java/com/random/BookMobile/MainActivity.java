@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         Intent logoutIntent = new Intent(MainActivity.this, LoginActivity.class);
         prf = getSharedPreferences("user_details", MODE_PRIVATE);
-        if(!prf.contains("username") && !prf.contains("password")) {
+        if(!prf.contains("jwt_token")) {
             startActivity(logoutIntent);
         }
         mainViewPager = findViewById(R.id.main_view_pager);

@@ -57,12 +57,16 @@ public class GeneralBookDetailFragment extends AppCompatDialogFragment {
 
         bookSummary = customView.findViewById(R.id.bookSummary);
        // bookSummary.setText("The story of a few boys stranded on an island.");
-        if(bundle != null){
-           bookTitle.setText(bundle.getString("title"));
-           bookSummary.setText(bundle.getString("desc"));
-        }
+
         copiesNo = customView.findViewById(R.id.copiesNo);
         takersNo = customView.findViewById(R.id.takersNo);
+
+        if(bundle != null){
+            bookTitle.setText(bundle.getString("title"));
+            bookSummary.setText(bundle.getString("desc"));
+            copiesNo.setText(bundle.getString("available copies"));
+            takersNo.setText(bundle.getString("taker count"));
+        }
 
         //button listener
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {

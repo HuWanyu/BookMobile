@@ -2,6 +2,7 @@ package com.random.BookMobile.Fragments_Bar;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -29,15 +31,22 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.random.BookMobile.GeneralBookDetailFragment;
 import com.random.BookMobile.LoginActivity;
+import com.random.BookMobile.MainActivity;
+import com.random.BookMobile.PreferencesActivity;
 import com.random.BookMobile.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,9 +58,16 @@ import es.dmoral.toasty.Toasty;
 
 public class AddListingFragment extends Fragment {
     int REQUEST_CODE = 0;
+    String jwt_token,  ampm, time;
+    int userid;
     MaterialButton addListingButton, dateButton;
-    String title, condition, location, timing, price;
+    String title, condition, location, timing;
+    TextView pricingText, locationText, bookTitle;
+    Spinner conditionSpinner, amPmSpinner, timeSpinner;
+    int price, numBooks;
     private RequestQueue mQueue;
+    SharedPreferences pref;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,34 +75,37 @@ public class AddListingFragment extends Fragment {
         View view = inflater.inflate(R.layout.add_listing_fragment, container, false);
         Resources res = getResources();
 
+        //getting SharedPrefs
+        pref = getActivity().getSharedPreferences("user_details", Context.MODE_PRIVATE);
+        if(pref.contains("jwt_token")) {
+           jwt_token = pref.getString("jwt_token",null);
+        }
+        pullUserid(jwt_token);
+
         // Book Title
-        TextView bookTitle = view.findViewById(R.id.bookTitleText);
-        title = bookTitle.getText().toString().trim();
+        bookTitle = view.findViewById(R.id.bookTitleText);
+        //Location
+        locationText = view.findViewById(R.id.locText);
 
         //setting up dropdown list for book condition
         String[] conditionList = res.getStringArray(R.array.conArray);
-        Spinner conditionSpinner = view.findViewById(R.id.conSpinner);
+        conditionSpinner = view.findViewById(R.id.conSpinner);
         ArrayAdapter<String> conAdapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, conditionList);
         conditionSpinner.setAdapter(conAdapter);
-        condition = conditionSpinner.getSelectedItem().toString().trim();
-
-        //Location
-        TextView locationText = view.findViewById(R.id.locText);
-        location = locationText.getText().toString().trim();
 
         //setting up dropdown list for am/pm
         String[] amPmList = res.getStringArray(R.array.ampmarray);
-        Spinner amPmSpinner = view.findViewById(R.id.ampmSpinner);
+        amPmSpinner = view.findViewById(R.id.ampmSpinner);
         ArrayAdapter<String> amPmAdapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, amPmList);
         amPmSpinner.setAdapter(amPmAdapter);
-        String ampm = amPmSpinner.getSelectedItem().toString().trim();
+
 
         //setting up dropdown list for timings
         Integer[] timeList = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        Spinner timeSpinner = view.findViewById(R.id.timeSpinner);
+        timeSpinner = view.findViewById(R.id.timeSpinner);
         ArrayAdapter<Integer> timeAdapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, timeList);
         timeSpinner.setAdapter(timeAdapter);
-        String time = timeSpinner.getSelectedItem().toString().trim();
+
 
 
        dateButton = view.findViewById(R.id.datePickerButton);
@@ -95,7 +114,7 @@ public class AddListingFragment extends Fragment {
             public void onClick(View v) {
                 Calendar cal = Calendar.getInstance(TimeZone.getDefault()); // Get current date
 
-// Create the DatePickerDialog instance
+                // Create the DatePickerDialog instance
                 DatePickerDialog datePicker = new DatePickerDialog(getContext(),
                         R.style.Theme_AppCompat_Light_Dialog, datePickerListener,
                         cal.get(Calendar.YEAR),
@@ -107,17 +126,24 @@ public class AddListingFragment extends Fragment {
             }
         });
 
-        timing = dateButton.getText().toString() + " "+ time + ampm;
-
         // price
-        TextView pricingText = view.findViewById(R.id.priceText);
-        price = pricingText.getText().toString().trim();
+        pricingText = view.findViewById(R.id.priceText);
 
         //add listing button
         addListingButton = view.findViewById(R.id.listButton);
         addListingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //get all the values in input fields
+                title = bookTitle.getText().toString().trim();
+                condition = conditionSpinner.getSelectedItem().toString().trim();
+                ampm = amPmSpinner.getSelectedItem().toString().trim();
+                time = timeSpinner.getSelectedItem().toString().trim();
+                location = locationText.getText().toString().trim();
+                price = Integer.valueOf(pricingText.getText().toString().trim());
+                timing = dateButton.getText().toString() +" " +time + " " + ampm;
+
+                //send them to server here
                 addListingToServer(title, condition, location, timing, price);
             }
         });
@@ -140,99 +166,29 @@ public class AddListingFragment extends Fragment {
         }
     };
 
+    public void setUserId(int id)
+    {
+        this.userid = id;
+    }
+    public int getUserId()
+    {
+        return userid;
+    }
 
-    public void addListingToServer(final String title, final String condition, final String location, final String timing, final String price){
-
+    public void pullUserid(final String jwt){
         mQueue = Volley.newRequestQueue(getActivity());
+        String url ="https://bookmobile-backend.herokuapp.com/user/me";
 
-        String url = "https://api.myjson.com/bins/192ib6";
-        final AlertDialog waitingDialog = new SpotsDialog.Builder()
-                .setContext(getActivity())
-                .setMessage("Adding New Book...")
-                .setCancelable(false)
-                .build();
-        waitingDialog.show();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.d("RESPONSE", response.toString());
-                            // JSONObject validateObj = response.getJSONObject("loginValid");
-                            String status = response.getString("add_book");
-                            // JSONArray listedBooks = response.getJSONArray("books_listed");
-
-                            Log.d("LOGIN STATUS", "Username:" + status);
-
-                            if (status.equals("success")) {
-                                Toasty.success(getContext(), "Added Listing!", Toast.LENGTH_SHORT).show();
-                                waitingDialog.dismiss();
-                            }
-                            else
-                            {
-
-                                // Toasty.error(LoginActivity.this,"Wrong user!", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (Exception e) {
-
-                            waitingDialog.dismiss();
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (error instanceof NetworkError) {
-                    waitingDialog.dismiss();
-                    Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
-                } else if (error instanceof ServerError) {
-                    waitingDialog.dismiss();
-                    Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
-                }  else if (error instanceof NoConnectionError) {
-                    waitingDialog.dismiss();
-                    Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
-                } else if (error instanceof TimeoutError) {
-                    waitingDialog.dismiss();
-                    Toasty.error(getContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
-                }
-                error.printStackTrace();
-            }
-        });
-
-
-
-        // String url = "https://api.myjson.com/bins/1ayd4u";
-       // String url = "http://bookmobile.apiblueprint.org/listing/_id?gid='abc'&tid=";
-
-       /* String url = "https://api.myjson.com/bins/192ib6";
-        final AlertDialog waitingDialog = new SpotsDialog.Builder()
-                .setContext(getActivity())
-                .setMessage("Adding New Book...")
-                .setTheme(R.style.Custom)
-                .setCancelable(false)
-                .build();
-        waitingDialog.show();
-
-        StringRequest request = new StringRequest(Request.Method.POST, url,
+        //POST REQUEST:
+        StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            JSONObject validateObj = new JSONObject(response.toString());
-                            String status = validateObj.getString("add_book");
-                            Log.d("Add Book", "AddBook:" + status);
-                            if (status.equals("success")) {
-                                Toasty.success(getContext(), "Added Listing!", Toast.LENGTH_SHORT).show();
-                                waitingDialog.dismiss();
-                            }
-                            else
-                            {
-
-                            }
-
+                            JSONObject validateObj = new JSONObject(response);
+                            int id = validateObj.getInt("id");
+                            setUserId(id);
                         } catch (Exception e) {
-
                             e.printStackTrace();
                         }
                     }
@@ -240,36 +196,327 @@ public class AddListingFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NetworkError) {
-                    waitingDialog.dismiss();
+
                     Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
                 } else if (error instanceof ServerError) {
-                    waitingDialog.dismiss();
+
                     Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
                 }  else if (error instanceof NoConnectionError) {
-                    waitingDialog.dismiss();
+
                     Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
                 } else if (error instanceof TimeoutError) {
-                    waitingDialog.dismiss();
+
                     Toasty.error(getContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
                 }
                 error.printStackTrace();
             }
         })
         {
+            /** Passing some request headers* */
             @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String> params = new HashMap<>();
-                params.put("book_name", title);
-                params.put("book_condition", condition);
-                params.put("meeting_location", location);
-                params.put("meeting_time", timing);
-                params.put("book_price_credit", price);
-                return params;
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/json");
+                headers.put("api-token", jwt);
+                return headers;
             }
-        };*/
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
         mQueue.add(request);
 
     }
+    public void addListingToServer(final String title, final String condition, final String location, final String timing, final int price){
+
+        mQueue = Volley.newRequestQueue(getActivity());
+
+        Log.v("USER", String.valueOf(getUserId()));
+        //String url = "https://api.myjson.com/bins/192ib6";
+        String url ="https://bookmobile-backend.herokuapp.com/listing/";
+        final AlertDialog waitingDialog = new SpotsDialog.Builder()
+                .setContext(getActivity())
+                .setMessage("Adding New Book...")
+                .setCancelable(false)
+                .build();
+        waitingDialog.show();
+        int book_id = 0;
+
+        if(title.equals("Crime & Punishment"))
+            book_id=3;
+        else if(title.equals("Lord of The Flies"))
+            book_id=2;
+        else if(title.equals("Pride and Prejudice"))
+            book_id=1;
+        else if(title.equals("1984"))
+            book_id=4;
+
+        try{
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("book_condition", 10);
+            jsonBody.put("book_price_credit", price);
+            jsonBody.put("book_id", book_id);
+            jsonBody.put("giver_id", getUserId());
+            jsonBody.put("meeting_location", location);
+            jsonBody.put("meeting_time", timing);
+            jsonBody.put("completion_status", "1");
+
+            final String mRequestBody = jsonBody.toString();
+
+            //POST REQUEST:
+            StringRequest request = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                String error = null;
+                                Log.d("RESPONSE!!!!", response);
+                                JSONObject validateObj = new JSONObject(response);
+                                if(validateObj.has("error"))
+                                    error = validateObj.getString("error");
+
+                                if(error!=null) {
+                                    waitingDialog.dismiss();
+                                    Toasty.error(getContext(), error, Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    waitingDialog.dismiss();
+                                    Toasty.success(getContext(), "Listing successful!", Toast.LENGTH_SHORT).show();
+
+                                    //set all fields to empty
+                                    bookTitle.setText("");
+                                    locationText.setText("");
+                                    dateButton.setText("Set date");
+                                    pricingText.setText("");
+                                    conditionSpinner.setSelection(0);
+                                    amPmSpinner.setSelection(0);
+                                    timeSpinner.setSelection(0);
+
+                                    //get copies available
+                                    getBookCopies(title);
+                                }
+
+                            } catch (Exception e) {
+
+                                waitingDialog.dismiss();
+                                Toasty.error(getContext(), "Server Error!", Toast.LENGTH_SHORT, true).show();
+
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof NetworkError) {
+                        waitingDialog.dismiss();
+                        Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                    } else if (error instanceof ServerError) {
+                        waitingDialog.dismiss();
+                        Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                    }  else if (error instanceof NoConnectionError) {
+                        waitingDialog.dismiss();
+                        Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                    } else if (error instanceof TimeoutError) {
+                        waitingDialog.dismiss();
+                        Toasty.error(getContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                    }
+                    error.printStackTrace();
+                }
+            })
+            {
+                /** Passing some request headers* */
+                @Override
+                public Map getHeaders() throws AuthFailureError {
+                    HashMap headers = new HashMap();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("jwt_token", jwt_token);
+                    return headers;
+                }
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+        mQueue.add(request);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void getBookCopies(final String title)
+    {
+        mQueue = Volley.newRequestQueue(getActivity());
+        String url ="";
+        //String url = "https://api.myjson.com/bins/192ib6";
+
+            url = "https://bookmobile-backend.herokuapp.com/book/"+title.replaceAll(" ","%20");
+            Log.v("URL", url);
+
+
+        //GET REQUEST:
+            StringRequest request = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                String error = null;
+                                Log.d("RESPONSE!!!!", response);
+                                JSONObject bookObj = new JSONObject(response);
+                                if(bookObj.has("error"))
+                                    error = bookObj.getString("error");
+                                if(error!=null) {
+
+                                    Toasty.error(getContext(), error, Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                 JSONArray listingArray = bookObj.getJSONArray("listings");
+                                 numBooks = 0;
+                                 for(int i =0; i<listingArray.length();i++)
+                                 {
+                                     numBooks+=1;
+                                 }
+                                    //increment copies available
+                                    incrementBookCopies(title);
+                                }
+
+                            } catch (Exception e) {
+                                Toasty.error(getContext(), "Server Error!", Toast.LENGTH_SHORT, true).show();
+
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof NetworkError) {
+                        Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                    } else if (error instanceof ServerError) {
+                        Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                    }  else if (error instanceof NoConnectionError) {
+                        Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                    } else if (error instanceof TimeoutError) {
+                        Toasty.error(getContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                    }
+                    error.printStackTrace();
+                }
+            })
+            {
+                /** Passing some request headers* */
+                @Override
+                public Map getHeaders() throws AuthFailureError {
+                    HashMap headers = new HashMap();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("jwt_token", jwt_token);
+                    return headers;
+                }
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+            };
+            mQueue.add(request);
+        }
+
+    public void incrementBookCopies(String title) {
+        mQueue = Volley.newRequestQueue(getActivity());
+        String url = "https://bookmobile-backend.herokuapp.com/book/";
+        Log.v("URL", url);
+        Log.v("Number of Books(increment)", String.valueOf(numBooks));
+
+        try {
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("book_name", title);
+            jsonBody.put("num_book_available", numBooks++);
+            final String mRequestBody = jsonBody.toString();
+            //GET REQUEST:
+            StringRequest request = new StringRequest(Request.Method.PUT, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                String error = null;
+                                Log.d("RESPONSE!!!!", response);
+                                JSONObject bookObj = new JSONObject(response);
+                                if (bookObj.has("error"))
+                                    error = bookObj.getString("error");
+                                if (error != null) {
+                                    Toasty.error(getContext(), error, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    numBooks = bookObj.getInt("num_book_available");
+
+                                }
+
+                            } catch (Exception e) {
+                                Toasty.error(getContext(), "Server Error!", Toast.LENGTH_SHORT, true).show();
+
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (error instanceof NetworkError) {
+                        Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
+                    } else if (error instanceof ServerError) {
+                        Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                    } else if (error instanceof NoConnectionError) {
+                        Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();
+                    } else if (error instanceof TimeoutError) {
+                        Toasty.error(getContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                    }
+                    error.printStackTrace();
+                }
+            }) {
+                /**
+                 * Passing some request headers*
+                 */
+                @Override
+                public Map getHeaders() throws AuthFailureError {
+                    HashMap headers = new HashMap();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("jwt_token", jwt_token);
+                    return headers;
+                }
+
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+
+            };
+            mQueue.add(request);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
 }

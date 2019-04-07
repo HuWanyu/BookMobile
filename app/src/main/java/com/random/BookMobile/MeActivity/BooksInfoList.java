@@ -1,5 +1,7 @@
 package com.random.BookMobile.MeActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.random.BookMobile.LoginActivity;
@@ -45,24 +48,39 @@ public class BooksInfoList extends AppCompatActivity {
         setContentView(R.layout.activity_list_of_books);
 
          prf = getSharedPreferences("user_details",MODE_PRIVATE);
-         String listedBooks = prf.getString("listed books", null);
-         try {
-             JSONArray books = new JSONArray(listedBooks);
-             for(int i = 0; i<books.length(); i++)
-             {
-                 BookName.add(books.get(i).toString());
-             }
-         }
-         catch (JSONException e)
-         {
 
+         String listedBooks = prf.getString("listed books", null);
+
+         if(listedBooks!=null) {
+             try {
+                 JSONArray books = new JSONArray(listedBooks);
+                 if(books.length()==0)
+                 {
+                     AlertDialog alertDialog = new AlertDialog.Builder(BooksInfoList.this).create();
+                     alertDialog.setTitle("No Books Listed");
+                     alertDialog.setMessage("You don't have any books listed! Please add a listing.");
+                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                             new DialogInterface.OnClickListener() {
+                                 public void onClick(DialogInterface dialog, int which) {
+                                     Intent intent = new Intent(BooksInfoList.this, MainActivity.class);
+                                     intent.putExtra("id", 2);
+                                     startActivity(intent);
+                                     BooksInfoList.this.finish();
+                                 }
+                             });
+                     alertDialog.show();
+                 }
+                 for (int i = 0; i < books.length(); i++) {
+                     BookName.add(books.get(i).toString());
+                 }
+             } catch (JSONException e) {
+                    e.printStackTrace();
+             }
          }
 
         bookList = findViewById(R.id.listOfBooks);
         BooksInfoListAdapter adapter = new BooksInfoListAdapter(this, BookName);
         bookList.setAdapter(adapter);
-
-
 
     }
 
