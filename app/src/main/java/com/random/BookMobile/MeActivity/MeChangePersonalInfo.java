@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +53,8 @@ public class MeChangePersonalInfo extends AppCompatActivity {
     private String newPassword;
     private String newEmail;
     private RequestQueue mQueue;
+
+    TextInputLayout newPasswordWrapper, newEmailWrapper;
     SharedPreferences prf;
     //private DatabaseHelp db = new DatabaseHelp(this);
 
@@ -67,16 +70,19 @@ public class MeChangePersonalInfo extends AppCompatActivity {
         setContentView(R.layout.activity_change_personal_info);
 
         Password = findViewById(R.id.inputPassword);
-        Email  = findViewById(R.id.inputEmail);
+        Email = findViewById(R.id.inputEmail);
+
+        newPasswordWrapper = findViewById(R.id.updatePassword);
+        newEmailWrapper = findViewById(R.id.updateEmail);
 
         prf = getSharedPreferences("user_details", Context.MODE_PRIVATE);
-        String email = prf.getString("email",null);
+        String email = prf.getString("email", null);
         final String jwt_token = prf.getString("jwt_token", null);
         Email.setText(email);
 
         userAvatar = findViewById(R.id.userAvatar);
         int userChoiceOfAvatar = getIntent().getIntExtra("User Choice of Avatar", 0);
-        switch (userChoiceOfAvatar){
+        switch (userChoiceOfAvatar) {
             case 1:
                 userAvatar.setImageResource(R.drawable.books1);
                 break;
@@ -92,43 +98,67 @@ public class MeChangePersonalInfo extends AppCompatActivity {
         }
 
 
-        updateAvatar=findViewById(R.id.changeAvatar);
-        updateAvatar.setOnClickListener(new View.OnClickListener(){
-                public void onClick(View v){
-                    Intent toChangeAvatar = new Intent(MeChangePersonalInfo.this, UpdateAvatar.class);
-                    startActivity(toChangeAvatar);
-                }
-            });
+        updateAvatar = findViewById(R.id.changeAvatar);
+        updateAvatar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent toChangeAvatar = new Intent(MeChangePersonalInfo.this, UpdateAvatar.class);
+                startActivity(toChangeAvatar);
+            }
+        });
 
         Confirm = findViewById(R.id.ConfirmChangePersonalInfo);
-        Confirm.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        Confirm.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
 
-                newPassword  =  Password.getText().toString();
+                newPassword = Password.getText().toString();
                 newEmail = Email.getText().toString();
 
-                updateUserData(newEmail, newPassword, jwt_token);
+                if (!checkUpdatedAccountInfoEligibility(newPassword, newEmail)) {
+                    if (newPassword.equals(""))
+                        newPasswordWrapper.setError("Please enter appropriate input for this field");
+                    if (newEmail.equals(""))
+                        newEmailWrapper.setError("Please enter appropriate input for this field");
 
-                if(!newEmail.equals(""))
-//                    LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_EMAIL,newEmail);
+                    Email.setText("");
+                    Password.setText("");
+                } else {
+                    updateUserData(newEmail, newPassword, jwt_token);
+                    Email.setText("");
+                    Password.setText("");
+                    Intent goBack = new Intent(MeChangePersonalInfo.this, MainActivity.class);
+                    goBack.putExtra("id", 2);
+                    startActivity(goBack);
 
-
-                if(!newPassword.equals(""))
- //                   LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_PASSWORD,newPassword);
-
-                if(InputValidator.ValidatePasswordInput(newPassword)) {
- //                   Toast.makeText(getBaseContext(), "password changed", Toast.LENGTH_LONG).show();LoginActivity.UpdateUserInfo(AccountEntry.COLUMN_PASSWORD, newPassword);
                 }
-
-
-                Intent goBack = new Intent(MeChangePersonalInfo.this, MainActivity.class);
-                goBack.putExtra("id", 2);
-                startActivity(goBack);
             }
-    });
+        });
 
+    }
 
+    private boolean checkNewPassword(String password){
+        if(!InputValidator.ValidatePasswordInput(password) && password.length() <= 10){
+            Toasty.error(this, "Error: the password is not valid, it should contain non-space characters with length longer than 10, and it should not contain spaces", Toast.LENGTH_LONG).show();
+            return false;
         }
+        return true;
+    }
+
+    private boolean checkNewEmail(String Email){          //returns 0 if Email doesnt exist, returns 1 if it does
+        if(InputValidator.ValidateEmailInput(Email)){
+
+            return true;
+        }
+        Toasty.error(this, "Error: Please enter a valid email.", Toast.LENGTH_LONG).show();
+        return false;
+    } //end
+
+    private boolean checkUpdatedAccountInfoEligibility(String password, String email){
+        //To be completed later (for now don't check is duplicate usernames exist)
+        if (checkNewPassword(password) && checkNewEmail(email)){
+            return true;
+        }
+        return false;
+    }
 
         public void updateUserData(String email, String pass, final String jwt)
         {

@@ -89,28 +89,30 @@ public class RegistrationActivity extends AppCompatActivity{
     }
 
     private boolean checkUsername(String Username) {          //returns 0 if Username doesnt exist, returns 1 if it does
-        if (!InputValidator.ValidateUserNameInput(Username) && Username.length() <= 15 && Username.length() >= 6) {
-            Toasty.error(this, "Error: the Username is not valid, it should contain alphabets and numbers only", Toast.LENGTH_LONG).show();
-            return false;
+        if (InputValidator.ValidateUserNameInput(Username)) {
+
+            return true;
         }
-        return true;
+        Toasty.error(this, "Error: the Username is not valid, it should contain alphabets and numbers only and should be between 5 to 15 characters long.", Toast.LENGTH_LONG).show();
+        return false;
     }
 
 
     private boolean checkPassword(String password){
-        if(!InputValidator.ValidatePasswordInput(password) && password.length() >= 6){
-            Toasty.error(this, "Error: the password is not valid, it should contain non-space characters with length longer than 6, and it should not contain spaces", Toast.LENGTH_LONG).show();
+        if(!InputValidator.ValidatePasswordInput(password) && password.length() <= 10){
+            Toasty.error(this, "Error: the password is not valid, it should contain non-space characters with length longer than 10, and it should not contain spaces", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
     }
 
     private boolean checkEmail(String Email){          //returns 0 if Email doesnt exist, returns 1 if it does
-        if(!InputValidator.ValidateEmailInput(Email) && Email.length()<=0){
-            Toasty.error(this, "Error: the email is not valid", Toast.LENGTH_LONG).show();
-            return false;
+        if(InputValidator.ValidateEmailInput(Email)){
+
+            return true;
         }
-       return true;
+        Toasty.error(this, "Error: Please enter a valid email.", Toast.LENGTH_LONG).show();
+       return false;
     } //end
 
     private boolean checkAccountInfoEligibility(String username, String password, String email){

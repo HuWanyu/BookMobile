@@ -100,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                 username = mUsername.getText().toString().trim();
                 password = mPassword.getText().toString().trim();
                 if (!username.equals("") && !password.equals(""))
+
                     validateUser(username, password);
                 else {
                     usernameWrapper.setError("This is a required field.");
@@ -186,7 +187,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toasty.error(getApplicationContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
                     } else if (error instanceof ServerError) {
                         waitingDialog.dismiss();
-                        Toasty.error(getApplicationContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                        Toasty.error(getApplicationContext(), "Server Error! Make sure credentials are correct!", Toast.LENGTH_LONG).show();
                     } else if (error instanceof NoConnectionError) {
                         waitingDialog.dismiss();
                         Toasty.error(getApplicationContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();

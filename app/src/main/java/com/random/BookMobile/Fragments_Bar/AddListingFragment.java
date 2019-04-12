@@ -134,17 +134,29 @@ public class AddListingFragment extends Fragment {
         addListingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //get all the values in input fields
-                title = bookTitle.getText().toString().trim();
-                condition = conditionSpinner.getSelectedItem().toString().trim();
-                ampm = amPmSpinner.getSelectedItem().toString().trim();
-                time = timeSpinner.getSelectedItem().toString().trim();
-                location = locationText.getText().toString().trim();
-                price = Integer.valueOf(pricingText.getText().toString().trim());
-                timing = dateButton.getText().toString() +" " +time + " " + ampm;
 
-                //send them to server here
-                addListingToServer(title, condition, location, timing, price);
+                    //get all the values in input fields
+                    title = bookTitle.getText().toString().trim();
+                    condition = conditionSpinner.getSelectedItem().toString().trim();
+                    ampm = amPmSpinner.getSelectedItem().toString().trim();
+                    time = timeSpinner.getSelectedItem().toString().trim();
+                    location = locationText.getText().toString().trim();
+                    if(pricingText.getText().toString().length()!=0)
+                    price = Integer.valueOf(pricingText.getText().toString().trim());
+                    else
+                        Toasty.error(getContext(), "Please set a date!", Toast.LENGTH_SHORT).show();
+                    if(dateButton.getText()!="Set Date")
+                    timing = dateButton.getText().toString() + " " + time + " " + ampm;
+                    else
+                        Toasty.error(getContext(), "Please set a date!", Toast.LENGTH_SHORT).show();
+
+                    if(title!=null && location!=null)
+                    //send them to server here
+                    addListingToServer(title, condition, location, timing, price);
+                    else
+                        Toasty.error(getContext(), "Please remember to fill in all fields!", Toast.LENGTH_LONG).show();
+
+
             }
         });
 
@@ -315,7 +327,14 @@ public class AddListingFragment extends Fragment {
                         Toasty.error(getContext(), "Oops. Network Error!", Toast.LENGTH_LONG).show();
                     } else if (error instanceof ServerError) {
                         waitingDialog.dismiss();
-                        Toasty.error(getContext(), "Oops. Server Error!", Toast.LENGTH_LONG).show();
+                        Toasty.error(getContext(), "The server had issues processing the data. Please make sure valid details are entered.", Toast.LENGTH_LONG).show();
+                        bookTitle.setText("");
+                        locationText.setText("");
+                        dateButton.setText("Set Date");
+                        pricingText.setText("");
+                        conditionSpinner.setSelection(0);
+                        amPmSpinner.setSelection(0);
+                        timeSpinner.setSelection(0);
                     }  else if (error instanceof NoConnectionError) {
                         waitingDialog.dismiss();
                         Toasty.error(getContext(), "Oops. No connection!", Toast.LENGTH_LONG).show();

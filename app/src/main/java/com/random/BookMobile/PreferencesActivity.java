@@ -108,7 +108,10 @@ public class PreferencesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                createUser();
+                if(preference!=null)
+                    createUser();
+                else
+                    Toasty.error(PreferencesActivity.this, "PLEASE SELECT A PREFERENCE TO CONTINUE", Toasty.LENGTH_LONG).show();
             }
         });
 
